@@ -1,0 +1,37 @@
+<html>
+<head><title>My Test Extension Options</title></head>
+<script type="text/javascript">
+// Saves options to localStorage.
+function save_options() {
+  var minFontSize = document.getElementById('minFontSize');
+  var minSidebarWidth = document.getElementById('minSidebarWidth');
+  localStorage['extensions.hupper.style_min_fontsize'] = minFontSize.value;
+  localStorage['extensions.hupper.style_wider_sidebar'] = minSidebarWidth.value;
+  // localStorage["favorite_color"] = color;
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Options Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  document.getElementById('minFontSize').value = localStorage['extensions.hupper.style_min_fontsize'] || 0;
+  document.getElementById('minSidebarWidth').value = localStorage['extensions.hupper.style_wider_sidebar'] || 0;
+}
+
+</script>
+
+<body onload="restore_options()">
+  <div id="status"></div>
+  minimum font size:<br />
+  <input type="text" value="" id="minFontSize" /><br />
+  minimum sidebar width:<br />
+  <input type="text" value="" id="minSidebarWidth" /><br />
+<br>
+<button onclick="save_options()">Save</button>
+</body>
+</html>

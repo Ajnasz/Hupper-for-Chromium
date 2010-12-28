@@ -1,0 +1,38 @@
+{
+  "name": "Hupper",
+  "version": "1.0",
+  "description": "Extension for HUP.hu",
+  "browser_action": {
+    "default_icon": "icon.png"
+  },
+  "background_page": "background.html",
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "matches": ["http://hup.hu/*"],
+      "js": [
+        "chrome/content/hupper/namespace.js",
+        "chrome/content/hupper/hp.js",
+        "chrome/content/hupper/hlog.js",
+        "chrome/content/hupper/json.js",
+        "chrome/content/hupper/styles.js",
+        "chrome/content/hupper/transform.js",
+        "chrome/content/hupper/hup-events.js",
+        "chrome/content/hupper/hup-elementer.js",
+        "chrome/content/hupper/hupblock.js",
+        "chrome/content/hupper/hupblocks.js",
+        "chrome/content/hupper/hupcomment.js",
+        "chrome/content/hupper/hupnode.js",
+        "chrome/content/hupper/menu.js",
+        "chrome/content/hupper/hupper.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "http://hup.hu/",
+    "https://hup.hu/",
+    "unlimitedStorage"
+  ]
+}

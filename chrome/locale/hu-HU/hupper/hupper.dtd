@@ -1,0 +1,36 @@
+<!ENTITY Hupper.enabletrollfilter "Trollszűrő engedélyezése">
+<!ENTITY Hupper.trolls "Trollok (Vesszővel elválasztott felhasználónevek)">
+<!ENTITY Hupper.trollcolor "A Trollok hozzászólásainak fejlécének a színe">
+<!ENTITY Hupper.trollfiltermethod "Trollok hozzászólásait eltüntető effekt">
+<!ENTITY Hupper.trollfilter.hide "Elrejtés">
+<!ENTITY Hupper.trollfilter.hilight "Kiemelés">
+<!ENTITY Hupper.trollfilter.hideanswers "Troll hozzászólásra érkezett válaszok elrejtése">
+<!ENTITY Hupper.enablehupperfilter "Hupperszűrő engedélyezése">
+<!ENTITY Hupper.huppers "Hupperek (vesszővel elválasztott felhasználónevek)">
+<!ENTITY Hupper.huppercolor "A Hupperek hozzászólásainak fejlécének a színe">
+<!ENTITY Hupper.enablenewcommentchange "Az új hozzászólások fejlécében megjelenő 'új' szöveg lecserélésének engedélyezése">
+<!ENTITY Hupper.newcommenttext "A szöveg, amire le legyen cserélve">
+<!ENTITY Hupper.extracommentlinks "A fel és vissza linkek engedélyezése a hozzászólások láblécében">
+<!ENTITY Hupper.hilightforumlinesonhover "Fórum sorok kiemelése egér sor fölé vitelekor">
+<!ENTITY Hupper.insertpermalink "Permalink beszúrása a hozzászólások láblécébe">
+<!ENTITY Hupper.insertnewtexttonode "Új jelző beszúrása azon cikkek fejlécébe, ahol olvasatlan hozzászólás van">
+<!ENTITY Hupper.fadeparentcomment "Szülő hozzászólás áttűnés">
+<!ENTITY Hupper.showquicknavbox "Gyors navigációs doboz mutatása">
+<!ENTITY Hupper.highlightuser "Felhasználók hozzászólásainak kiemelése (név:#fff999,név2:#999fff)">
+<!ENTITY Hupper.tabgeneral "Általános">
+<!ENTITY Hupper.tabcomment "Hozzászólás színezés">
+<!ENTITY Hupper.tabaccount "Felhasználói információk">
+<!ENTITY Hupper.tabsyles "Stílusok">
+<!ENTITY Hupper.username "Felhasználói név:">
+<!ENTITY Hupper.password "Jelszó:">
+<!ENTITY Hupper.hidetaxonomy "Elrejtendo cikk tipusok">
+<!ENTITY Hupper.showinstatusbar "Ikon mutatása az állapotsorban">
+<!ENTITY Hupper.parseblocks "Blokkok feldologozása">
+<!ENTITY Hupper.resetblocks "Blokkok visszaállítása">
+
+<!ENTITY Hupper.style.indent "Vonal mutatása a szülő hozzászóláshoz">
+<!ENTITY Hupper.style.accessibility "Jobb használhatóságot lehetővé tévő stílusok betöltése">
+<!ENTITY Hupper.style.sidebarwidth "Oldallsávok szélessége">
+<!ENTITY Hupper.style.minfontsize "Minimum betűméret">
+
+<!ENTITY Hupper.pref.acceptbutton "Alkalmaz">
