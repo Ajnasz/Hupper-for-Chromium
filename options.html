@@ -2,12 +2,93 @@
 <head><title>My Test Extension Options</title></head>
 <script type="text/javascript">
 // Saves options to localStorage.
+
+function getPrefNameForElem(elem) {
+
+    switch(elem.id) {
+
+      case "enabletrollfilter":
+        prefName = 'extensions.hupper.filtertrolls';
+        break;
+      case "trolls":
+        prefName = 'extensions.hupper.trolls';
+        break;
+      case "trollcolor":
+        prefName = 'extensions.hupper.trollcolor';
+        break;
+      case "trollfiltermethod":
+        prefName = 'extensions.hupper.trollfiltermethod';
+        break;
+      case "trollfilterHideanswers":
+        prefName = 'extensions.hupper.hidetrollanswers';
+        break;
+      case "huppers":
+        prefName = 'extensions.hupper.huppers';
+        break;
+      case "enablenewcommentchange":
+        prefName = 'extensions.hupper.replacenewcommenttext';
+        break;
+      case "newcommenttext":
+        prefName = 'extensions.hupper.newcommenttext';
+        break;
+      case "extracommentlinks":
+        prefName = 'extensions.hupper.extracommentlinks';
+        break;
+      case "hilightforumlinesonhover":
+        prefName = 'extensions.hupper.hilightforumlinesonhover';
+        break;
+      case "insertpermalink":
+        prefName = 'extensions.hupper.insertpermalink';
+        break;
+      case "insertnewtexttonode":
+        prefName = 'extensions.hupper.insertnewtexttonode';
+        break;
+      case "fadeparentcomment":
+        prefName = 'extensions.hupper.fadeparentcomment';
+        break;
+      case "showquicknavbox":
+        prefName = 'extensions.hupper.showqnavbox';
+        break;
+      case "hidetaxonomy":
+        prefName = 'extensions.hupper.hidetaxonomy';
+        break;
+      case "showinstatusbar":
+        prefName = 'extensions.hupper.showinstatusbar';
+        break;
+      case "parseblocks":
+        prefName = 'extensions.hupper.parseblocks';
+        break;
+      case "indent":
+        prefName = 'extensions.hupper.style_indent';
+        break;
+      case "accessibility":
+        prefName = 'extensions.hupper.style_accessibility';
+        break;
+      case "sidebarwidth":
+        prefName = 'extensions.hupper.style_wider_sidebar';
+        break;
+      case "minfontsize":
+        prefName = 'extensions.hupper.style_min_fontsize';
+        break;
+    }
+    return prefName;
+}
+function getFormElements = function() {
+  var elments = document.getElementById('hupperOptsForm').elements;
+  return Array.prototype.slice.call(elements);
+}
 function save_options() {
-  var minFontSize = document.getElementById('minFontSize');
-  var minSidebarWidth = document.getElementById('minSidebarWidth');
-  localStorage['extensions.hupper.style_min_fontsize'] = minFontSize.value;
-  localStorage['extensions.hupper.style_wider_sidebar'] = minSidebarWidth.value;
-  // localStorage["favorite_color"] = color;
+  var elements = getFormElements();
+  elements.forEach(function(elem) {
+    var prefName = getPrefNameForElem(elem), value = '';
+    if (elem.nodeName.toUpperCase() === 'INPUT') {
+      value = elem.type.toUpperCase() === 'CHECKBOX' ? elem.checked : elem.value
+    } else {
+      value = elem.value;
+    }
+    localStorage[prefName] = value;
+  });
+
 
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
@@ -19,18 +100,22 @@ function save_options() {
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-  document.getElementById('minFontSize').value = localStorage['extensions.hupper.style_min_fontsize'] || 0;
-  document.getElementById('minSidebarWidth').value = localStorage['extensions.hupper.style_wider_sidebar'] || 0;
+  var elements = getFormElements();
+  elements.forEach(function(elem) {
+    var prefName = getPrefNameForElem(elem);
+    if (elem.type.toUpperCase() === 'CHECKBOX') {
+      elem.checked = localStorage[prefName];
+    } else {
+      elem.value = localStorage[prefName];
+    }
 }
 
 </script>
 
 <body onload="restore_options()">
   <div id="status"></div>
-  minimum font size:<br />
-  <input type="text" value="" id="minFontSize" /><br />
-  minimum sidebar width:<br />
-  <input type="text" value="" id="minSidebarWidth" /><br />
+  <form action="" method="" onsubmit="return false;" id="hupperOptsForm">
+  </form>
 <br>
 <button onclick="save_options()">Save</button>
 </body>
