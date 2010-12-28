@@ -1,10 +1,7 @@
 {
   "name": "Hupper",
-  "version": "1.0",
+  "version": "1.1.2",
   "description": "Extension for HUP.hu",
-  "browser_action": {
-    "default_icon": "icon.png"
-  },
   "background_page": "background.html",
   "options_page": "options.html",
   "content_scripts": [
