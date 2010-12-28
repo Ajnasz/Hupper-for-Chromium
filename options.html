@@ -1,120 +1,200 @@
 <html>
-<head><title>My Test Extension Options</title></head>
-<script type="text/javascript">
-// Saves options to localStorage.
+  <head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Hupper Extension Options</title>
+    <script type="text/javascript" src="chrome/content/hupper/namespace.js"></script>
+    <script type="text/javascript" src="chrome/content/hupper/hp.js"></script>
+    <script type="text/javascript">
+    // Saves options to localStorage.
 
-function getPrefNameForElem(elem) {
+    var hp = new HP();
 
-    switch(elem.id) {
+    function getPrefNameForElem(elem) {
+        var prefName = '';
 
-      case "enabletrollfilter":
-        prefName = 'extensions.hupper.filtertrolls';
-        break;
-      case "trolls":
-        prefName = 'extensions.hupper.trolls';
-        break;
-      case "trollcolor":
-        prefName = 'extensions.hupper.trollcolor';
-        break;
-      case "trollfiltermethod":
-        prefName = 'extensions.hupper.trollfiltermethod';
-        break;
-      case "trollfilterHideanswers":
-        prefName = 'extensions.hupper.hidetrollanswers';
-        break;
-      case "huppers":
-        prefName = 'extensions.hupper.huppers';
-        break;
-      case "enablenewcommentchange":
-        prefName = 'extensions.hupper.replacenewcommenttext';
-        break;
-      case "newcommenttext":
-        prefName = 'extensions.hupper.newcommenttext';
-        break;
-      case "extracommentlinks":
-        prefName = 'extensions.hupper.extracommentlinks';
-        break;
-      case "hilightforumlinesonhover":
-        prefName = 'extensions.hupper.hilightforumlinesonhover';
-        break;
-      case "insertpermalink":
-        prefName = 'extensions.hupper.insertpermalink';
-        break;
-      case "insertnewtexttonode":
-        prefName = 'extensions.hupper.insertnewtexttonode';
-        break;
-      case "fadeparentcomment":
-        prefName = 'extensions.hupper.fadeparentcomment';
-        break;
-      case "showquicknavbox":
-        prefName = 'extensions.hupper.showqnavbox';
-        break;
-      case "hidetaxonomy":
-        prefName = 'extensions.hupper.hidetaxonomy';
-        break;
-      case "showinstatusbar":
-        prefName = 'extensions.hupper.showinstatusbar';
-        break;
-      case "parseblocks":
-        prefName = 'extensions.hupper.parseblocks';
-        break;
-      case "indent":
-        prefName = 'extensions.hupper.style_indent';
-        break;
-      case "accessibility":
-        prefName = 'extensions.hupper.style_accessibility';
-        break;
-      case "sidebarwidth":
-        prefName = 'extensions.hupper.style_wider_sidebar';
-        break;
-      case "minfontsize":
-        prefName = 'extensions.hupper.style_min_fontsize';
-        break;
+        switch(elem.id) {
+
+          case "enabletrollfilter":
+            prefName = 'extensions.hupper.filtertrolls';
+            break;
+          case "trolls":
+            prefName = 'extensions.hupper.trolls';
+            break;
+          case "trollcolor":
+            prefName = 'extensions.hupper.trollcolor';
+            break;
+          case "trollfiltermethod":
+            prefName = 'extensions.hupper.trollfiltermethod';
+            break;
+          case "trollfilterHideanswers":
+            prefName = 'extensions.hupper.hidetrollanswers';
+            break;
+          case "huppers":
+            prefName = 'extensions.hupper.huppers';
+            break;
+          case "enablenewcommentchange":
+            prefName = 'extensions.hupper.replacenewcommenttext';
+            break;
+          case "newcommenttext":
+            prefName = 'extensions.hupper.newcommenttext';
+            break;
+          case "extracommentlinks":
+            prefName = 'extensions.hupper.extracommentlinks';
+            break;
+          case "hilightforumlinesonhover":
+            prefName = 'extensions.hupper.hilightforumlinesonhover';
+            break;
+          case "insertpermalink":
+            prefName = 'extensions.hupper.insertpermalink';
+            break;
+          case "insertnewtexttonode":
+            prefName = 'extensions.hupper.insertnewtexttonode';
+            break;
+          case "fadeparentcomment":
+            prefName = 'extensions.hupper.fadeparentcomment';
+            break;
+          case "showquicknavbox":
+            prefName = 'extensions.hupper.showqnavbox';
+            break;
+          case "hidetaxonomy":
+            prefName = 'extensions.hupper.hidetaxonomy';
+            break;
+          case "showinstatusbar":
+            prefName = 'extensions.hupper.showinstatusbar';
+            break;
+          case "parseblocks":
+            prefName = 'extensions.hupper.parseblocks';
+            break;
+          case "indent":
+            prefName = 'extensions.hupper.style_indent';
+            break;
+          case "accessibility":
+            prefName = 'extensions.hupper.style_accessibility';
+            break;
+          case "sidebarwidth":
+            prefName = 'extensions.hupper.style_wider_sidebar';
+            break;
+          case "minfontsize":
+            prefName = 'extensions.hupper.style_min_fontsize';
+            break;
+          case "highlightusers":
+            prefName = "extensions.hupper.highlightusers";
+            break;
+        }
+        return prefName;
     }
-    return prefName;
-}
-function getFormElements = function() {
-  var elments = document.getElementById('hupperOptsForm').elements;
-  return Array.prototype.slice.call(elements);
-}
-function save_options() {
-  var elements = getFormElements();
-  elements.forEach(function(elem) {
-    var prefName = getPrefNameForElem(elem), value = '';
-    if (elem.nodeName.toUpperCase() === 'INPUT') {
-      value = elem.type.toUpperCase() === 'CHECKBOX' ? elem.checked : elem.value
-    } else {
-      value = elem.value;
+    function getFormElements() {
+      var elements = document.getElementById('hupperOptsForm').elements;
+      return Array.prototype.slice.call(elements);
     }
-    localStorage[prefName] = value;
-  });
+    function save_options() {
+      var elements = getFormElements();
+      elements.forEach(function(elem) {
+        var prefName = getPrefNameForElem(elem), value = '';
+        if (elem.nodeName.toUpperCase() === 'INPUT') {
+          value = elem.type.toUpperCase() === 'CHECKBOX' ? elem.checked : elem.value
+        } else {
+          value = elem.value;
+        }
+        hp.set.byName(prefName, value);
+      });
 
 
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
-}
-
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  var elements = getFormElements();
-  elements.forEach(function(elem) {
-    var prefName = getPrefNameForElem(elem);
-    if (elem.type.toUpperCase() === 'CHECKBOX') {
-      elem.checked = localStorage[prefName];
-    } else {
-      elem.value = localStorage[prefName];
+      // Update status to let user know options were saved.
+      var st = document.getElementById("status");
+      st.innerHTML = "Options Saved.";
+      setTimeout(function() {
+        st.innerHTML = "";
+      }, 750);
     }
-}
 
-</script>
+    // Restores select box state to saved value from localStorage.
+    function restore_options() {
+      var elements = getFormElements();
+      elements.forEach(function(elem) {
+        var prefName = getPrefNameForElem(elem);
+
+        hp.get.byName(prefName, function(response){
+          var value = response.pref.value;
+          if (elem.type.toUpperCase() === 'CHECKBOX') {
+            elem.checked = value;
+          } else {
+            elem.value = value;
+          }
+        });
+      });
+    }
+
+    </script>
+  </head>
 
 <body onload="restore_options()">
   <div id="status"></div>
   <form action="" method="" onsubmit="return false;" id="hupperOptsForm">
+    <input type="checkbox" id="enablenewcommentchange">
+    <label for="enablenewcommentchange">Enable to replace the 'új' text in the header of recently posted comments</label><br>
+
+    <label for="newcommenttext">The text to replace to</label><br>
+    <input type="input" id="newcommenttext"><br>
+
+    <input type="checkbox" id="extracommentlinks">
+    <label for="extracommentlinks"> Enable the top and back links in the comment footers</label><br>
+
+    <input type="checkbox" id="hilightforumlinesonhover">
+    <label for="hilightforumlinesonhover">Highlight forum lines on mouse over</label><br>
+
+    <input type="checkbox" id="insertpermalink">
+    <label for="insertpermalink">Insert permalink in the comment footers</label><br>
+
+    <input type="checkbox" id="insertnewtexttonode">
+    <label for="insertnewtexttonode">Insert the NEW text in the header of the articles where unread feeds are</label><br>
+
+    <input type="checkbox" id="fadeparentcomment">
+    <label for="fadeparentcomment">Fade parent comment</label><br>
+
+    <input type="checkbox" id="showquicknavbox">
+    <label for="showquicknavbox"> Show quick navigation box</label><br>
+
+    <label for="hidetaxonomy">Hidable article types</label><br>
+    <input type="input" id="hidetaxonomy"><br>
+
+
+    <input type="checkbox" id="showinstatusbar">
+    <label for="showinstatusbar">Show icon in statusbar</label><br>
+
+    <input type="checkbox" id="parseblocks">
+    <label for="parseblocks">Parse blocks</label><br>
+
+    <hr>
+
+    <input type="checkbox" id="enabletrollfilter">
+    <label for="enabletrollfilter">Enable trollfilter</label><br>
+
+    <label for="trolls"> Trolls (comma separated user names)</label><br>
+    <input type="input" id="trolls"><br>
+
+    <label for="trollcolor"> The background color of the header of troll comments</label><br>
+    <input type="input" id="trollcolor"><br>
+
+    <label for="trollfiltermethod">Effect to filter troll comments</label><br>
+    <select id="trollfiltermethod"> <option>hide</option>
+            <option>highlight</option></select><br>
+
+    <input type="checkbox" id="trollfilterHideanswers">
+    <label for="trollfilterHideanswers">Hide answers to troll comments</label>
+
+    <hr>
+    <label for="highlightusers">Highlight user comments (username:#fff999,username2:#999fff)</label><br>
+    <input type="input" id="highlightusers"><br>
+    <hr>
+    <input type="checkbox" id="indent">
+    <label for="indent">Show line guide to the parent comment</label><br>
+    <input type="checkbox" id="accessibility">
+    <label for="accessibility">Load accesibility styles</label><br>
+    <label for="sidebarwidth">Width of sidebars</label><br>
+    <input type="text" id="sidebarwidth"><br>
+    <label for="minfontsize">Minimum font size</label><br>
+    <input type="text" id="minfontsize"><br>
   </form>
 <br>
 <button onclick="save_options()">Save</button>

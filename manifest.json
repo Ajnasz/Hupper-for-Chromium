@@ -16,6 +16,7 @@
         "chrome/content/hupper/hp.js",
         "chrome/content/hupper/hlog.js",
         "chrome/content/hupper/json.js",
+        "chrome/content/hupper/ajax.js",
         "chrome/content/hupper/styles.js",
         "chrome/content/hupper/transform.js",
         "chrome/content/hupper/hup-events.js",

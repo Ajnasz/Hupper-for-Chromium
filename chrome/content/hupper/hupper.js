@@ -307,47 +307,51 @@ Hupper.parseNodes = function(nodes, newNodes, nodeMenu) {
     node.addNodes(nodes, nodeMenu);
   });
 };
-// /**
-//  * Send an AJAX HEAD request to the server, to remove the unread nodes
-//  * @param {Event} e Event object
-//  * @requires HupAjax
-//  * @see HupAjax
-//  */
-// Hupper.markNodeAsRead = function(e) {
-//   new HupAjax( {
-//     method: 'get',
-//     url: 'http://hup.hu' + this.getAttribute('path').replace(/^\s*(.+)\s*$/, '$1'),
-//     successHandler: function() {
-//       this.el.innerHTML = HUP.Bundles.getString('markingSuccess');
-//       if(this.el.nextSibling.getAttribute('class') == 'hnew') {
-//         HUP.El.Remove(this.el.nextSibling, this.el.parentNode);
-//       }
-//     },
-//     loadHandler: function() {
-//       var img = HUP.El.Img('chrome://hupper/skin/ajax-loader.gif', 'marking...');
-//       HUP.El.RemoveAll(this.el);
-//       HUP.El.Add(img, this.el);
-//     },
-//     errorHandler: function() {
-//       var t = HUP.El.Txt(HUP.Bundles.getString('markingError'));
-//       HUP.El.RemoveAll(this.el);
-//       HUP.El.Add(t, this.el);
-//     }
-//   }, e.target);
-// };
-// /**
-//  * Marks as read all nodes, which have unread items
-//  * @param {Event} e event object
-//  */
-// Hupper.markAllNodeAsRead = function(e) {
-//   var n = HUP.markReadNodes;
-//   var d = document || HUP.w;
-//   for(var i = 0, nl = n.length; i < nl; i++) {
-//     var click = d.createEvent("MouseEvents");
-//     click.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-//     n[i].dispatchEvent(click);
-//   }
-// };
+/**
+ * Send an AJAX HEAD request to the server, to remove the unread nodes
+ * @param {Event} e Event object
+ * @requires HupAjax
+ * @see HupAjax
+ */
+Hupper.markNodeAsRead = function(e) {
+  new HupAjax( {
+    method: 'get',
+    url: 'http://hup.hu' + this.getAttribute('path').replace(/^\s*(.+)\s*$/, '$1'),
+    successHandler: function() {
+      this.el.innerHTML = HUP.Bundles.getString('markingSuccess');
+      if(this.el.nextSibling.getAttribute('class') == 'hnew') {
+        HUP.El.Remove(this.el.nextSibling, this.el.parentNode);
+      }
+      var el = this.el;
+      setTimeout(function() {
+        HUP.El.Remove(el);
+      }, 750);
+    },
+    loadHandler: function() {
+      var txt = HUP.El.Txt(HUP.Bundles.getString('markingProgress'));
+      HUP.El.RemoveAll(this.el);
+      HUP.El.Add(txt, this.el);
+    },
+    errorHandler: function() {
+      var t = HUP.El.Txt(HUP.Bundles.getString('markingError'));
+      HUP.El.RemoveAll(this.el);
+      HUP.El.Add(t, this.el);
+    }
+  }, e.target);
+};
+/**
+ * Marks as read all nodes, which have unread items
+ * @param {Event} e event object
+ */
+Hupper.markAllNodeAsRead = function(e) {
+  var n = HUP.markReadNodes;
+  var d = document || HUP.w;
+  for(var i = 0, nl = n.length; i < nl; i++) {
+    var click = d.createEvent("MouseEvents");
+    click.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    n[i].dispatchEvent(click);
+  }
+};
 /**
  * Checks that the arrray contains the specified element
  * @param {String,Number,Array,Object} value
@@ -612,6 +616,15 @@ Hupper.start = function(e) {
             case 'restoreBlocks':
               output = 'restore hidden blocks';
               break;
+            case 'markingSuccess':
+              output = 'done';
+              break;
+            case 'markingError':
+              output = 'error';
+              break;
+            case 'markingProgress':
+              output = 'marking...';
+              break;
             default:
               output = 'text bundle is undefined: ' + n;
               break;
@@ -645,21 +658,20 @@ Hupper.start = function(e) {
         var newComments = c.newComments;
         var indentComments = c.indentComments;
         HUP.hp.get.showqnavbox(function(response) {
-          console.log('show qnav box', response);
           if(c.newComments.length && response.pref.value) {
             Hupper.appendNewNotifier(null, null, hupMenu);
           }
         });
       } else {
         HUP.hp.get.insertnewtexttonode(function(response) {
-          console.log('insert new text node', response);
-          
           if(response.pref.value) {
             var nodes = Hupper.getNodes();
             Hupper.parseNodes(nodes[0], nodes[1], new Hupper.NodeMenus(hupMenu));
-            if(nodes[1].length > 0 && HUP.hp.get.showqnavbox()) {
-              Hupper.appendNewNotifier('#node-' + nodes[1][0].id, true, hupMenu);
-            }
+            HUP.hp.get.showqnavbox(function(response) {
+              if(nodes[1].length > 0 && response.pref.value) {
+                Hupper.appendNewNotifier('#node-' + nodes[1][0].id, true, hupMenu);
+              }
+            });
           }
         });
       }

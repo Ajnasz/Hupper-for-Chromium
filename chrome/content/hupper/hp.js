@@ -1,132 +1,50 @@
-HP = function() {
-  // this.M = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-  var prefs = {};
-  var getPref = function(n, cb) {
-    var callback = function(response) {
-      prefs[response.pref.name] = response.pref.value;
-      if (typeof cb === 'function') {
-        cb(response);
-      }
-    };
-    // here we do some caching
-    if (typeof prefs[n] === 'undefined') {
-      chrome.extension.sendRequest({pref: {name: n}}, callback);
-    } else {
-      callback({success: true, pref: {name: n, value: prefs[n]}});
+var HP;
+(function() {
+// this.M = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+var prefs = {};
+var getPref = function(n, cb) {
+  var callback = function(response) {
+    prefs[response.pref.name] = response.pref.value;
+    if (typeof cb === 'function') {
+      cb(response);
     }
   };
-  var setPref = function(n, v, cb) {
-    var callback = function(response) {
-      prefs[response.pref.name] = response.pref.value;
-      if (typeof cb === 'function') {
-        cb(response);
-      }
-    };
-    chrome.extension.sendRequest({pref: {name: n, value: v}}, callback);
+  // here we do some caching
+  if (typeof prefs[n] === 'undefined') {
+    chrome.extension.sendRequest({pref: {name: n}}, callback);
+  } else {
+    callback({success: true, pref: {name: n, value: prefs[n]}});
+  }
+};
+var setPref = function(n, v, cb) {
+  var callback = function(response) {
+    prefs[response.pref.name] = response.pref.value;
+    if (typeof cb === 'function') {
+      cb(response);
+    }
   };
+  chrome.extension.sendRequest({pref: {name: n, value: v}}, callback);
+};
+HP = function() {
   this.M = new function() {
     return {
       getBoolPref: function(n, cb) {
         getPref(n, cb);
-        return;
-        var output = localStorage[n];
-        if (typeof output === 'undefined') {
-          switch(n) {
-            case 'extensions.hupper.filtertrolls':
-            case "extensions.hupper.hidetrollanswers":
-            case "extensions.hupper.filterhuppers":
-            case "extensions.hupper.replacenewcommenttext":
-            case "extensions.hupper.prevnextlinks":
-            case "extensions.hupper.extracommentlinks":
-            case "extensions.hupper.hilightforumlinesonhover":
-            case "extensions.hupper.insertnewtexttonode":
-            case "extensions.hupper.showqnavbox":
-            case "extensions.hupper.fadeparentcomment":
-            case "extensions.hupper.showinstatusbar":
-            case "extensions.hupper.parseblocks":
-            case "extensions.hupper.style_indent":
-            case "extensions.hupper.style_accessibility":
-              output = true;
-              break;
-            case "extensions.hupper.insertpermalink":
-            case "extensions.hupper.hideads":
-              output = false;
-              break;
-          }
-        }
-        return !!output;
       },
       getCharPref: function(n, cb) {
         getPref(n, cb);
-        return;
-        var output = localStorage[n];
-        if (typeof output === 'undefined') {
-          switch(n) {
-            case 'extensions.hupper.blocks':
-              output = '{}';
-              break;
-            case "extensions.hupper.trolls":
-              output = '';
-              break;
-            case "extensions.hupper.trollfiltermethod":
-              output = 'hilight';
-              break;
-            case "extensions.hupper.trollcolor":
-              output = '#CFB2A7';
-              break;
-            case "extensions.hupper.huppers":
-              output = '';
-              break;
-            case "extensions.hupper.huppercolor":
-              output = '#B5D7BE';
-              break;
-            case "extensions.hupper.newcommenttext":
-              output = '[new]';
-              break;
-            case "extensions.hupper.username":
-              output = '';
-              break;
-            case "extensions.hupper.hidetaxonomy":
-              output = '';
-              break;
-            case "extensions.hupper.blocks":
-              output = '({})';
-              break;
-          }
-        }
-        return output + '';
       },
       getIntPref: function(n, cb) {
         getPref(n, cb);
-        return;
-        var output = localStorage[n];
-        if (typeof output === 'undefined') {
-          switch(n) {
-            case 'extensions.hupper.style_wider_sidebar':
-              output = 0;
-              break;
-            case 'extensions.hupper.style_min_fontsize':
-              output = 0;
-              break;
-          }
-        }
-        console.log(output);
-        return parseInt(output, 10);
       },
       setBoolPref: function(n, v, cb) {
         setPref(n, v, cb)
-        return;
-        localStorage[n] = !!v;
       },
       setCharPref: function(n, v, cb) {
         setPref(n, v, cb)
-        return;
-        localStorage[n] = '' + v;
       },
       setIntPref: function(n, v, cb) {
         setPref(n, v, cb)
-        return;
-        localStorage[n] = parseInt(v, 10);
       },
     }
   }()
@@ -135,6 +53,9 @@ HP = function() {
 HP.prototype = {
   M: null, // Manager
   get: {
+    byName: function(n, cb) {
+      getPref(n, cb);
+    },
     trolls: function(cb) {
       return this.M.getCharPref('extensions.hupper.trolls', cb);
     },
@@ -237,17 +158,20 @@ HP.prototype = {
       return this.M.getIntPref('extensions.hupper.style_min_fontsize', cb);
     },
     trollCommentHeaderClass: function(cb) {
-      return 'trollHeader'
+      cb({success: true, pref: {value: 'trollHeader', name: 'trollHeader'}})
     },
     trollCommentClass: function(cb) {
-      return 'trollComment';
+      cb({success: true, pref: {value: 'trollComment', name: 'trollcommentclass'}})
     },
     trollCommentAnswersClass: function(cb) {
-      return 'trollCommentAnswer';
+      cb({success: true, pref: {value: 'trollCommentAnswer', name: 'trollcommentanswer'}})
     },
   },
   set: {
     M: this.M,
+    byName: function(n, v, cb) {
+      setPref(n, v, cb);
+    },
     trolls: function(value, cb) {
       this.M.setCharPref('extensions.hupper.trolls', value, cb);
     },
@@ -336,3 +260,4 @@ HP.prototype = {
     },
   }
 };
+}());

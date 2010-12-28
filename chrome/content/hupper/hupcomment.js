@@ -159,7 +159,7 @@
             commentClasses.trollCommentHeaderClass = response.pref.value;
             HUP.hp.get.trollCommentAnswersClass(function(response) {
               commentClasses.trollCommentAnswersClass = response.pref.value;
-              _this.highlightComment();
+              _this._highlightComment();
             });
            });
         });
