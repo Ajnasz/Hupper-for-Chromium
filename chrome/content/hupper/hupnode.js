@@ -13,7 +13,7 @@ Hupper.Node = function(node) {
   this.element = node;
   this.id = parseInt(node.id.replace('node-', ''));
   this.header = header;
-  this.path = Hupper.Stringer.trim(HUP.El.GetFirstTag('a', this.header).getAttribute('href'));
+  this.path = HupStringer.trim(HUP.El.GetFirstTag('a', this.header).getAttribute('href'));
   this.submitData = submitData;
   this.cont = cont;
   this.footer = footer;
@@ -56,11 +56,11 @@ Hupper.Node.prototype = {
   checkTaxonomy: function() {
     var _this = this;
     HUP.hp.get.hidetaxonomy(function(response) {
-      var hideTaxonomies = Hupper.Stringer.trim(response.pref.value);
+      var hideTaxonomies = HupStringer.trim(response.pref.value);
       (hideTaxonomies.length && hideTaxonomies.indexOf(_this.taxonomy) != -1) ?
         _this.hide() :
         _this.show();
-    })
+    });
   },
   addNnewSpan: function() {
     this.sp = HUP.El.Span();

@@ -7,7 +7,7 @@
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": ["http://hup.hu/*"],
+      "matches": ["http://hupperl/*", "http://hup.hu/*"],
       "js": [
         "chrome/content/hupper/namespace.js",
         "chrome/content/hupper/hp.js",
@@ -15,6 +15,8 @@
         "chrome/content/hupper/json.js",
         "chrome/content/hupper/ajax.js",
         "chrome/content/hupper/styles.js",
+        "chrome/content/hupper/nodeheadbuilder.js",
+        "modules/hupstringer.jsm",
         "chrome/content/hupper/transform.js",
         "chrome/content/hupper/hup-events.js",
         "chrome/content/hupper/hup-elementer.js",
@@ -23,6 +25,7 @@
         "chrome/content/hupper/hupcomment.js",
         "chrome/content/hupper/hupnode.js",
         "chrome/content/hupper/menu.js",
+        "chrome/content/hupper/boot.js",
         "chrome/content/hupper/hupper.js"
       ]
     }
@@ -31,6 +34,8 @@
     "tabs",
     "http://hup.hu/",
     "https://hup.hu/",
+    "http://hupperl/",
+    "https://hupperl/",
     "unlimitedStorage"
   ]
 }

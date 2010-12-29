@@ -216,7 +216,7 @@ Hupper.Elementer.prototype = {
   AddClass: function(el, c) {
     if(!el || !c || this.HasClass(el, c)) return false;
     var curClass = el.getAttribute('class');
-    (curClass === null || Hupper.Stringer.empty(curClass)) ? el.setAttribute('class', c) : el.setAttribute('class', curClass + ' ' + c);
+    (curClass === null || HupStringer.empty(curClass)) ? el.setAttribute('class', c) : el.setAttribute('class', curClass + ' ' + c);
   },
   /**
   * Removes the specified class from the element
