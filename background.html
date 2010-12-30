@@ -88,9 +88,9 @@
             } else {
               chrome.tabs.insertCSS(sender.tab.id, {code: request.style}, cb);
             }
-          } else if(request.pref) {
-              if (request.pref.value) {
-                Prefs.set(request.pref.name, request.pref.value)
+          } else if(typeof request.pref !== '') {
+              if (typeof request.pref.value !== 'undefined') {
+                Prefs.set(request.pref.name, request.pref.value);
               }
               sendResponse({
                 success: true,
@@ -103,7 +103,6 @@
             sendResponse({success: false});
           }
       })
-      console.log(chrome)
   </script>
 </head>
 </html>
