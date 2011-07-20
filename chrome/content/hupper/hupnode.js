@@ -96,8 +96,8 @@ Hupper.Node.prototype = {
   addPrev: function() {
     this.previous === false ? HUP.El.Add(this.builder.buildFirstLink(), this.sp) : HUP.El.Add(this.builder.buildPrevLink('node-' + this.previous), this.sp);
   },
-  addTaxonomyCloser: function() {
-    this.taxonomyButton = HUP.El.Button();
+  addTaxonomyCloser: function () {
+    this.taxonomyButton = HUP.El.Btn();
     HUP.El.AddClass(this.taxonomyButton, 'hupper-button taxonomy-button delete-button');
     this.taxonomyButton.setAttribute('title', HUP.Bundles.getFormattedString('hideTaxonomy', [this.taxonomy]));
     var _this = this;
