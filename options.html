@@ -2,6 +2,17 @@
   <head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Hupper Extension Options</title>
+    <style type="text/css">
+      body {
+          font-family: sans-serif;
+      }
+      label {
+        margin-top: 10px;
+      }
+      fieldset {
+        margin: 10px 0;
+      }
+    </style>
     <script type="text/javascript" src="chrome/content/hupper/namespace.js"></script>
     <script type="text/javascript" src="chrome/content/hupper/hp.js"></script>
     <script type="text/javascript">
@@ -131,70 +142,75 @@
 <body onload="restore_options()">
   <div id="status"></div>
   <form action="" method="" onsubmit="return false;" id="hupperOptsForm">
-    <input type="checkbox" id="enablenewcommentchange">
-    <label for="enablenewcommentchange">Enable to replace the 'új' text in the header of recently posted comments</label><br>
+    <fieldset>
+      <input type="checkbox" id="enablenewcommentchange">
+      <label for="enablenewcommentchange">Enable to replace the 'új' text in the header of recently posted comments</label><br>
 
-    <label for="newcommenttext">The text to replace to</label><br>
-    <input type="input" id="newcommenttext"><br>
+      <label for="newcommenttext">The text to replace to</label><br>
+      <input type="input" id="newcommenttext"><br>
 
-    <input type="checkbox" id="extracommentlinks">
-    <label for="extracommentlinks"> Enable the top and back links in the comment footers</label><br>
+      <input type="checkbox" id="extracommentlinks">
+      <label for="extracommentlinks"> Enable the top and back links in the comment footers</label><br>
 
-    <input type="checkbox" id="hilightforumlinesonhover">
-    <label for="hilightforumlinesonhover">Highlight forum lines on mouse over</label><br>
+      <input type="checkbox" id="hilightforumlinesonhover">
+      <label for="hilightforumlinesonhover">Highlight forum lines on mouse over</label><br>
 
-    <input type="checkbox" id="insertpermalink">
-    <label for="insertpermalink">Insert permalink in the comment footers</label><br>
+      <input type="checkbox" id="insertpermalink">
+      <label for="insertpermalink">Insert permalink in the comment footers</label><br>
 
-    <input type="checkbox" id="insertnewtexttonode">
-    <label for="insertnewtexttonode">Insert the NEW text in the header of the articles where unread feeds are</label><br>
+      <input type="checkbox" id="insertnewtexttonode">
+      <label for="insertnewtexttonode">Insert the NEW text in the header of the articles where unread feeds are</label><br>
 
-    <input type="checkbox" id="fadeparentcomment">
-    <label for="fadeparentcomment">Fade parent comment</label><br>
+      <input type="checkbox" id="fadeparentcomment">
+      <label for="fadeparentcomment">Fade parent comment</label><br>
 
-    <input type="checkbox" id="showquicknavbox">
-    <label for="showquicknavbox"> Show quick navigation box</label><br>
+      <input type="checkbox" id="showquicknavbox">
+      <label for="showquicknavbox"> Show quick navigation box</label><br>
 
-    <label for="hidetaxonomy">Hidable article types</label><br>
-    <input type="input" id="hidetaxonomy"><br>
+      <label for="hidetaxonomy">Hidable article types</label><br>
+      <input type="input" id="hidetaxonomy"><br>
 
 
-    <input type="checkbox" id="showinstatusbar">
-    <label for="showinstatusbar">Show icon in statusbar</label><br>
+      <input type="checkbox" id="showinstatusbar">
+      <label for="showinstatusbar">Show icon in statusbar</label><br>
 
-    <input type="checkbox" id="parseblocks">
-    <label for="parseblocks">Parse blocks</label><br>
+      <input type="checkbox" id="parseblocks">
+      <label for="parseblocks">Parse blocks</label><br>
 
-    <hr>
+      </fieldset>
+      <fieldset>
 
-    <input type="checkbox" id="enabletrollfilter">
-    <label for="enabletrollfilter">Enable trollfilter</label><br>
+        <input type="checkbox" id="enabletrollfilter">
+        <label for="enabletrollfilter">Enable trollfilter</label><br>
 
-    <label for="trolls"> Trolls (comma separated user names)</label><br>
-    <input type="input" id="trolls"><br>
+        <label for="trolls"> Trolls (comma separated user names)</label><br>
+        <input type="input" id="trolls"><br>
 
-    <label for="trollcolor"> The background color of the header of troll comments</label><br>
-    <input type="input" id="trollcolor"><br>
+        <label for="trollcolor"> The background color of the header of troll comments</label><br>
+        <input type="input" id="trollcolor"><br>
 
-    <label for="trollfiltermethod">Effect to filter troll comments</label><br>
-    <select id="trollfiltermethod"> <option>hide</option>
-            <option>highlight</option></select><br>
-
-    <input type="checkbox" id="trollfilterHideanswers">
-    <label for="trollfilterHideanswers">Hide answers to troll comments</label>
-
-    <hr>
-    <label for="highlightusers">Highlight user comments (username:#fff999,username2:#999fff)</label><br>
-    <input type="input" id="highlightusers"><br>
-    <hr>
-    <input type="checkbox" id="indent">
-    <label for="indent">Show line guide to the parent comment</label><br>
-    <input type="checkbox" id="accessibility">
-    <label for="accessibility">Load accesibility styles</label><br>
-    <label for="sidebarwidth">Width of sidebars</label><br>
-    <input type="text" id="sidebarwidth"><br>
-    <label for="minfontsize">Minimum font size</label><br>
-    <input type="text" id="minfontsize"><br>
+        <label for="trollfiltermethod">Effect to filter troll comments</label><br>
+        <select id="trollfiltermethod">
+            <option>hide</option>
+            <option>highlight</option>
+        </select><br>
+        <input type="checkbox" id="trollfilterHideanswers">
+        <label for="trollfilterHideanswers">Hide answers to troll comments</label>
+      </fieldset>
+      <fieldset>
+        <label for="highlightusers">Highlight user comments (username:#fff999,username2:#999fff)</label><br>
+        <input type="input" id="highlightusers"><br>
+      </fieldset>
+      <fieldset>
+        <input type="checkbox" id="indent">
+        <label for="indent">Show line guide to the parent comment</label><br>
+        <input type="checkbox" id="accessibility">
+        <label for="accessibility">Load accesibility styles</label><br>
+        <label for="sidebarwidth">Width of sidebars</label><br>
+        <input type="text" id="sidebarwidth"><br>
+        <label for="minfontsize">Minimum font size</label><br>
+        <input type="text" id="minfontsize"><br>
+      </fieldset>
   </form>
 <br>
 <button onclick="save_options()">Save</button>
