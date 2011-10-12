@@ -4,75 +4,74 @@
 
   <title>Background</title>
   <script type="text/javascript" charset="utf-8">
-
       var Prefs = {
           get: function(n) {
-            var output = localStorage[n];
-            if (typeof output === 'undefined') {
-              switch(n) {
-                case 'extensions.hupper.filtertrolls':
-                case "extensions.hupper.hidetrollanswers":
-                case "extensions.hupper.filterhuppers":
-                case "extensions.hupper.replacenewcommenttext":
-                case "extensions.hupper.prevnextlinks":
-                case "extensions.hupper.extracommentlinks":
-                case "extensions.hupper.hilightforumlinesonhover":
-                case "extensions.hupper.insertnewtexttonode":
-                case "extensions.hupper.showqnavbox":
-                case "extensions.hupper.fadeparentcomment":
-                case "extensions.hupper.showinstatusbar":
-                case "extensions.hupper.parseblocks":
-                case "extensions.hupper.style_indent":
-                case "extensions.hupper.style_accessibility":
-                  output = true;
-                  break;
-                case "extensions.hupper.insertpermalink":
-                case "extensions.hupper.hideads":
-                  output = false;
-                  break;
-                case 'extensions.hupper.blocks':
-                  output = '{}';
-                  break;
-                case "extensions.hupper.trolls":
-                  output = '';
-                  break;
-                case "extensions.hupper.trollfiltermethod":
-                  output = 'hilight';
-                  break;
-                case "extensions.hupper.trollcolor":
-                  output = '#CFB2A7';
-                  break;
-                case "extensions.hupper.huppers":
-                  output = '';
-                  break;
-                case "extensions.hupper.huppercolor":
-                  output = '#B5D7BE';
-                  break;
-                case "extensions.hupper.newcommenttext":
-                  output = '[new]';
-                  break;
-                case "extensions.hupper.username":
-                  output = '';
-                  break;
-                case "extensions.hupper.hidetaxonomy":
-                  output = '';
-                  break;
-                case "extensions.hupper.highlightusers":
-                  output = "username:#fff999,username2:#999fff";
-                  break;
-                case "extensions.hupper.blocks":
-                  output = '({})';
-                  break;
-                case 'extensions.hupper.style_wider_sidebar':
-                  output = 0;
-                  break;
-                case 'extensions.hupper.style_min_fontsize':
-                  output = 0;
-                  break;
-              }
+              var output = localStorage[n];
+              if (typeof output === 'undefined') {
+                  switch(n) {
+                      case 'extensions.hupper.filtertrolls':
+                      case "extensions.hupper.hidetrollanswers":
+                      case "extensions.hupper.filterhuppers":
+                      case "extensions.hupper.replacenewcommenttext":
+                      case "extensions.hupper.prevnextlinks":
+                      case "extensions.hupper.extracommentlinks":
+                      case "extensions.hupper.hilightforumlinesonhover":
+                      case "extensions.hupper.insertnewtexttonode":
+                      case "extensions.hupper.showqnavbox":
+                      case "extensions.hupper.fadeparentcomment":
+                      case "extensions.hupper.showinstatusbar":
+                      case "extensions.hupper.parseblocks":
+                      case "extensions.hupper.style_indent":
+                      case "extensions.hupper.style_accessibility":
+                        output = true;
+                        break;
+                      case "extensions.hupper.insertpermalink":
+                      case "extensions.hupper.hideads":
+                        output = false;
+                        break;
+                      case 'extensions.hupper.blocks':
+                        output = '{}';
+                        break;
+                      case "extensions.hupper.trolls":
+                        output = '';
+                        break;
+                      case "extensions.hupper.trollfiltermethod":
+                        output = 'hilight';
+                        break;
+                      case "extensions.hupper.trollcolor":
+                        output = '#CFB2A7';
+                        break;
+                      case "extensions.hupper.huppers":
+                        output = '';
+                        break;
+                      case "extensions.hupper.huppercolor":
+                        output = '#B5D7BE';
+                        break;
+                      case "extensions.hupper.newcommenttext":
+                        output = '[new]';
+                        break;
+                      case "extensions.hupper.username":
+                        output = '';
+                        break;
+                      case "extensions.hupper.hidetaxonomy":
+                        output = '';
+                        break;
+                      case "extensions.hupper.highlightusers":
+                        output = "username:#fff999,username2:#999fff";
+                        break;
+                      case "extensions.hupper.blocks":
+                        output = '({})';
+                        break;
+                      case 'extensions.hupper.style_wider_sidebar':
+                        output = 0;
+                        break;
+                      case 'extensions.hupper.style_min_fontsize':
+                        output = 0;
+                        break;
+                  }
 
-            }
-            return output;
+              }
+              return output;
           },
           set: function(n, v) {
             localStorage[n] = v;
@@ -81,28 +80,60 @@
       chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
           if (request.style && sender.tab) {
             var cb = function(a) {
-              sendResponse({success: true});
+                sendResponse({success: true});
             };
             if (request.isUrl) {
-              chrome.tabs.insertCSS(sender.tab.id, {file: request.style}, cb);
+                chrome.tabs.insertCSS(sender.tab.id, {file: request.style}, cb);
             } else {
-              chrome.tabs.insertCSS(sender.tab.id, {code: request.style}, cb);
+                chrome.tabs.insertCSS(sender.tab.id, {code: request.style}, cb);
             }
           } else if(typeof request.pref !== '') {
               if (typeof request.pref.value !== 'undefined') {
-                Prefs.set(request.pref.name, request.pref.value);
+                  Prefs.set(request.pref.name, request.pref.value);
               }
               sendResponse({
-                success: true,
-                pref: {
-                  name: request.pref.name,
-                  value: Prefs.get(request.pref.name)
-                }
+                  success: true,
+                  pref: {
+                      name: request.pref.name,
+                      value: Prefs.get(request.pref.name)
+                  }
               });
           } else {
-            sendResponse({success: false});
+              sendResponse({success: false});
           }
-      })
+      });
+      var onContextClick = function (type) {
+          return function (e) {
+              console.log(e);
+              chrome.tabs.getSelected(null, function (tab) {
+                  chrome.tabs.sendRequest(tab.id, {
+                      type: type,
+                      ev: e
+                    }, function () {
+                      console.log(cb)
+                  });
+              });
+          }
+      };
+      var contextConf = {
+          title: 'troll',
+          contexts: ['link'],
+          targetUrlPatterns: [
+              'http://www.hup.hu/user/*',
+              'https://www.hup.hu/user/*',
+              'http://hup.hu/user/*',
+              'https://hup.hu/user/*'
+          ]
+      };
+    ['troll', 'untroll', 'highlight', 'unhighlight'].forEach(function (title) {
+        var conf = {
+            title: title,
+            contexts: contextConf.contexts,
+            targetUrlPatterns: contextConf.targetUrlPatterns,
+            onclick: onContextClick(title)
+        };
+        chrome.contextMenus.create(conf);
+    });
   </script>
 </head>
 </html>

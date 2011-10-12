@@ -17,6 +17,7 @@
         "chrome/content/hupper/styles.js",
         "chrome/content/hupper/nodeheadbuilder.js",
         "modules/hupstringer.jsm",
+        "modules/trollHandler.jsm",
         "chrome/content/hupper/transform.js",
         "chrome/content/hupper/hup-events.js",
         "chrome/content/hupper/hup-elementer.js",
@@ -31,6 +32,7 @@
     }
   ],
   "permissions": [
+    "contextMenus",
     "tabs",
     "http://hup.hu/",
     "https://hup.hu/",

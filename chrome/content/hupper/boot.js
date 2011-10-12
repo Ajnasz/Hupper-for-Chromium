@@ -119,5 +119,92 @@ Hupper.boot = function(e) {
         });
       }
       Hupper.setBlocks();
+
+
+      var getUserElement = function (userUrl) {
+          var url = userUrl.replace(/^https?:\/\/[^/]+/, '');
+
+          return document.querySelector('a[title="Felhasználói profil megtekintése."][href="' + url + '"]');
+      };
+
+      var markAsTroll = function (element) {
+          if (element) {
+              var user = element.innerHTML;
+              trollHandler.addTroll(user, function () {
+                  if (c) {
+                      c.comments.forEach(function (comment) {
+                          if (comment.user === user) {
+                              comment.setTroll();
+                          }
+                      });
+                  }
+              });
+          }
+      };
+      var unmarkTroll = function (element) {
+          if (element) {
+              var user = element.innerHTML;
+              trollHandler.removeTroll(user, function () {
+                  if (c) {
+                      c.comments.forEach(function (comment) {
+                          if (comment.user === user) {
+                              comment.unsetTroll();
+                          }
+                      });
+                  }
+              });
+          }
+      };
+
+      var highlightUser = function (element) {
+          if (element) {
+              var user = element.innerHTML;
+              HUP.hp.get.huppercolor(function (response) {
+                  var color = response.pref.value || '#A5FF9F';
+                  trollHandler.highlightUser(user, color, function () {
+                      if (c) {
+                          c.comments.forEach(function (comment) {
+                              if (comment.user === user) {
+                                  comment.highLightComment(color);
+                              }
+                          });
+                      }
+                  });
+              });
+          }
+      };
+
+      var unhighlightUser = function (element) {
+          if (element) {
+              var user = element.innerHTML;
+              trollHandler.unhighlightUser(user, function () {
+                  if (c) {
+                      c.comments.forEach(function (comment) {
+                          if (comment.user === user) {
+                              comment.unhighLightComment();
+                          }
+                      });
+                  }
+              });
+          }
+      };
+
+      chrome.extension.onRequest.addListener(function (r) {
+          var element = getUserElement(r.ev.linkUrl);
+          switch (r.type) {
+              case 'troll':
+                  markAsTroll(element);
+                  break;
+              case 'untroll':
+                  unmarkTroll(element);
+                  break;
+              case 'highlight':
+                  highlightUser(element);
+                  break;
+              case 'unhighlight':
+                  unhighlightUser(element);
+                  break;
+          }
+      });
     }
 };
