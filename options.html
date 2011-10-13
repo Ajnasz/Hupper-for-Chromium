@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -9,12 +10,39 @@
       label {
         margin-top: 10px;
       }
+      #Content {
+        width: 600px;
+        margin: auto;
+      }
       fieldset {
         margin: 10px 0;
+      }
+      table.tree {
+          border-collapse: collapse;
+          margin: 10px 0 20px;
+          width: 100%;
+      }
+      table.tree > thead > tr > th {
+          background-color: #eee;
+          padding: 2px;
+      }
+      table.tree > thead > tr > th,
+      table.tree > tbody > tr > td {
+          border: 1px solid #999;
+          height: 1em;
+          padding: 2px 5px;
+      }
+      #trollsTree td {
+          width: 100%;
+      }
+      #highlightusersTree td {
+          width: 50%;
       }
     </style>
     <script type="text/javascript" src="chrome/content/hupper/namespace.js"></script>
     <script type="text/javascript" src="chrome/content/hupper/hp.js"></script>
+    <script type="text/javascript" src="modules/HupEvent.jsm"></script>
+    <script type="text/javascript" src="modules/treeView.jsm"></script>
     <script type="text/javascript">
     // Saves options to localStorage.
 
@@ -121,6 +149,83 @@
 
     // Restores select box state to saved value from localStorage.
     function restore_options() {
+      hp.get.trolls(function (response) {
+          var field = document.getElementById('trolls');
+          var trolls = response.pref.value.split(',').map(function (troll) {
+            return {name: {text: troll, editable: true}};
+          });
+          var tree = new TreeView('trollsTree', trolls);
+          tree.on('setCellText', function (o) {
+              if (!trolls[o.rowIndex]) {
+                  trolls[o.rowIndex] = {
+                      name: {
+                          text: '',
+                          editable: true
+                      }
+                  }
+                  tree.addEmptyRow();
+              }
+              trolls[o.rowIndex][o.colName].text = o.value;
+              field.value = trolls.map(function (troll) {
+                  return troll.name.text;
+              }).join(',');
+          });
+          field.type = 'hidden';
+      });
+      hp.get.highlightusers(function (response) {
+          var field = document.getElementById('highlightusers');
+          var highlightUsers = response.pref.value.split(',').map(function (user) {
+            var item = user.split(':');
+            return {name: {text: item[0], editable: true}, color: {text: item[1], editable: true}};
+          });
+          var tree = new TreeView('highlightusersTree', highlightUsers);
+          var updateField = function () {
+              var output = [];
+              highlightUsers.forEach(function (user) {
+                  if (user.name.text !== '' || user.color.text !== '') {
+                      output.push(user.name.text + ':' + user.color.text);
+                  }
+              });
+              field.value = output.join(',');
+          }
+          var isEmpty = function (rowIndex) {
+              var row = highlightUsers[rowIndex];
+              return row.name.text === '' && row.color.text === '';
+          }
+          tree.on('setCellText', function (o) {
+              highlightUsers[o.rowIndex][o.colName].text = o.value;
+              var len = highlightUsers.length;
+              
+              if (isEmpty(len - 1)) {
+                    while (isEmpty(len - 2) && isEmpty(len - 1)) {
+                        tree.removeLastRow();
+                        len = highlightUsers.length;
+                    }
+              } else {
+                  tree.addEmptyRow();
+              }
+              updateField();
+          });
+          tree.on('removeRow', function (index) {
+              highlightUsers.splice(index, 1);
+          });
+          tree.on('emptyRowAdded', function () {
+              highlightUsers[highlightUsers.length] = {
+                  name: {
+                    text: '',
+                    editable: true
+                  },
+
+                  color: {
+                    text: '',
+                    editable: true
+                  }
+              };
+          });
+          tree.addEmptyRow();
+          field.type = 'hidden';
+          // document.getElementById('highlightusersTree').appendChild(table);
+      });
       var elements = getFormElements();
       elements.forEach(function(elem) {
         var prefName = getPrefNameForElem(elem);
@@ -140,79 +245,84 @@
   </head>
 
 <body onload="restore_options()">
-  <div id="status"></div>
-  <form action="" method="" onsubmit="return false;" id="hupperOptsForm">
-    <fieldset>
-      <input type="checkbox" id="enablenewcommentchange">
-      <label for="enablenewcommentchange">Enable to replace the 'új' text in the header of recently posted comments</label><br>
+    <div id="Content">
+      <div id="status"></div>
+      <form action="" method="" onsubmit="return false;" id="hupperOptsForm">
+        <fieldset>
+          <input type="checkbox" id="enablenewcommentchange">
+          <label for="enablenewcommentchange">Enable to replace the 'új' text in the header of recently posted comments</label><br>
 
-      <label for="newcommenttext">The text to replace to</label><br>
-      <input type="input" id="newcommenttext"><br>
+          <label for="newcommenttext">The text to replace to</label><br>
+          <input type="input" id="newcommenttext"><br>
 
-      <input type="checkbox" id="extracommentlinks">
-      <label for="extracommentlinks"> Enable the top and back links in the comment footers</label><br>
+          <input type="checkbox" id="extracommentlinks">
+          <label for="extracommentlinks"> Enable the top and back links in the comment footers</label><br>
 
-      <input type="checkbox" id="hilightforumlinesonhover">
-      <label for="hilightforumlinesonhover">Highlight forum lines on mouse over</label><br>
+          <input type="checkbox" id="hilightforumlinesonhover">
+          <label for="hilightforumlinesonhover">Highlight forum lines on mouse over</label><br>
 
-      <input type="checkbox" id="insertpermalink">
-      <label for="insertpermalink">Insert permalink in the comment footers</label><br>
+          <input type="checkbox" id="insertpermalink">
+          <label for="insertpermalink">Insert permalink in the comment footers</label><br>
 
-      <input type="checkbox" id="insertnewtexttonode">
-      <label for="insertnewtexttonode">Insert the NEW text in the header of the articles where unread feeds are</label><br>
+          <input type="checkbox" id="insertnewtexttonode">
+          <label for="insertnewtexttonode">Insert the NEW text in the header of the articles where unread feeds are</label><br>
 
-      <input type="checkbox" id="fadeparentcomment">
-      <label for="fadeparentcomment">Fade parent comment</label><br>
+          <input type="checkbox" id="fadeparentcomment">
+          <label for="fadeparentcomment">Fade parent comment</label><br>
 
-      <input type="checkbox" id="showquicknavbox">
-      <label for="showquicknavbox"> Show quick navigation box</label><br>
+          <input type="checkbox" id="showquicknavbox">
+          <label for="showquicknavbox"> Show quick navigation box</label><br>
 
-      <label for="hidetaxonomy">Hidable article types</label><br>
-      <input type="input" id="hidetaxonomy"><br>
+          <label for="hidetaxonomy">Hidable article types</label><br>
+          <input type="input" id="hidetaxonomy"><br>
 
 
-      <input type="checkbox" id="showinstatusbar">
-      <label for="showinstatusbar">Show icon in statusbar</label><br>
+          <input type="checkbox" id="showinstatusbar">
+          <label for="showinstatusbar">Show icon in statusbar</label><br>
 
-      <input type="checkbox" id="parseblocks">
-      <label for="parseblocks">Parse blocks</label><br>
+          <input type="checkbox" id="parseblocks">
+          <label for="parseblocks">Parse blocks</label><br>
 
-      </fieldset>
-      <fieldset>
+          </fieldset>
+          <fieldset>
 
-        <input type="checkbox" id="enabletrollfilter">
-        <label for="enabletrollfilter">Enable trollfilter</label><br>
+            <input type="checkbox" id="enabletrollfilter">
+            <label for="enabletrollfilter">Enable trollfilter</label><br>
 
-        <label for="trolls"> Trolls (comma separated user names)</label><br>
-        <input type="input" id="trolls"><br>
+            <label for="trolls">Trolls:</label><br>
+            <input type="input" id="trolls">
 
-        <label for="trollcolor"> The background color of the header of troll comments</label><br>
-        <input type="input" id="trollcolor"><br>
+            <div id="trollsTree"></div>
 
-        <label for="trollfiltermethod">Effect to filter troll comments</label><br>
-        <select id="trollfiltermethod">
-            <option>hide</option>
-            <option>highlight</option>
-        </select><br>
-        <input type="checkbox" id="trollfilterHideanswers">
-        <label for="trollfilterHideanswers">Hide answers to troll comments</label>
-      </fieldset>
-      <fieldset>
-        <label for="highlightusers">Highlight user comments (username:#fff999,username2:#999fff)</label><br>
-        <input type="input" id="highlightusers"><br>
-      </fieldset>
-      <fieldset>
-        <input type="checkbox" id="indent">
-        <label for="indent">Show line guide to the parent comment</label><br>
-        <input type="checkbox" id="accessibility">
-        <label for="accessibility">Load accesibility styles</label><br>
-        <label for="sidebarwidth">Width of sidebars</label><br>
-        <input type="text" id="sidebarwidth"><br>
-        <label for="minfontsize">Minimum font size</label><br>
-        <input type="text" id="minfontsize"><br>
-      </fieldset>
-  </form>
-<br>
-<button onclick="save_options()">Save</button>
+            <label for="trollcolor"> The background color of the header of troll comments</label><br>
+            <input type="input" id="trollcolor"><br>
+
+            <label for="trollfiltermethod">Effect to filter troll comments</label><br>
+            <select id="trollfiltermethod">
+                <option>hide</option>
+                <option>highlight</option>
+            </select><br>
+            <input type="checkbox" id="trollfilterHideanswers">
+            <label for="trollfilterHideanswers">Hide answers to troll comments</label>
+          </fieldset>
+          <fieldset>
+            <label for="highlightusers">Highlight user comments:</label><br>
+            <input type="input" id="highlightusers">
+            <div id="highlightusersTree"></div>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" id="indent">
+            <label for="indent">Show line guide to the parent comment</label><br>
+            <input type="checkbox" id="accessibility">
+            <label for="accessibility">Load accesibility styles</label><br>
+            <label for="sidebarwidth">Width of sidebars</label><br>
+            <input type="text" id="sidebarwidth"><br>
+            <label for="minfontsize">Minimum font size</label><br>
+            <input type="text" id="minfontsize"><br>
+          </fieldset>
+      </form>
+    <br>
+    <button onclick="save_options()">Save</button>
+  </div>
 </body>
 </html>
