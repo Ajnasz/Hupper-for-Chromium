@@ -23,6 +23,7 @@
                       case "extensions.hupper.parseblocks":
                       case "extensions.hupper.style_indent":
                       case "extensions.hupper.style_accessibility":
+                      case "extensions.hupper.hideboringcomments":
                         output = true;
                         break;
                       case "extensions.hupper.insertpermalink":
@@ -32,17 +33,11 @@
                       case 'extensions.hupper.blocks':
                         output = '{}';
                         break;
-                      case "extensions.hupper.trolls":
-                        output = '';
-                        break;
                       case "extensions.hupper.trollfiltermethod":
                         output = 'hilight';
                         break;
                       case "extensions.hupper.trollcolor":
                         output = '#CFB2A7';
-                        break;
-                      case "extensions.hupper.huppers":
-                        output = '';
                         break;
                       case "extensions.hupper.huppercolor":
                         output = '#B5D7BE';
@@ -50,9 +45,9 @@
                       case "extensions.hupper.newcommenttext":
                         output = '[new]';
                         break;
+                      case "extensions.hupper.trolls":
+                      case "extensions.hupper.huppers":
                       case "extensions.hupper.username":
-                        output = '';
-                        break;
                       case "extensions.hupper.hidetaxonomy":
                         output = '';
                         break;
@@ -63,10 +58,11 @@
                         output = '({})';
                         break;
                       case 'extensions.hupper.style_wider_sidebar':
-                        output = 0;
-                        break;
                       case 'extensions.hupper.style_min_fontsize':
                         output = 0;
+                        break;
+                      case 'extensions.hupper.boringcommentcontents':
+                        output = "^([-_]|-1|\\+1)$";
                         break;
                   }
 

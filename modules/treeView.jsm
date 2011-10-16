@@ -1,6 +1,43 @@
 var TreeView;
 (function () {
-    var CellEditor = function (cell) {
+    var Cell, CellEditor;
+    Cell = function (name, cellData) {
+        var cell = document.createElement('td');
+        this.cell = cell;
+        cell.appendChild(document.createTextNode(cellData.text));
+        if (cellData.editable) {
+            this.editable = true;
+        }
+        this.colName = name;
+    };
+    Object.defineProperties(Cell.prototype, (function () {
+        var editable = false,
+            colName;
+        return {
+            editable: {
+                get: function () {
+                    return editable;
+                },
+                set: function (val) {
+                    editable = !!editable;
+                }
+            },
+            colName: {
+                get: function () {
+                    return colName;
+                },
+                set: function (val) {
+                    colName = colName;
+                }
+            },
+            isMe: {
+                value: function (cell) {
+                    return cell === this.cell;
+                }
+            }
+        };
+    }()));
+    CellEditor = function (cell) {
         this.cell = cell;
         this.value = cell.innerHTML;
     };
@@ -29,7 +66,6 @@ var TreeView;
     };
     CellEditor.prototype.saveValue = function () {
         this.value = this.input.value;
-        this.fireEvent('valueSaved');
         this.removeEditor();
     };
     CellEditor.prototype.removeEditor = function () {
@@ -77,6 +113,7 @@ var TreeView;
         return {
             set: function (val) {
                 value = val;
+                this.fireEvent('valueSaved', this.value);
             },
             get: function () {
                 return value;
@@ -123,6 +160,9 @@ var TreeView;
                 me.addRow(rowData);
             });
             this.addClass(table, 'tree');
+            rowTpl = null;
+            cellTpl = null;
+            thTpl = null;
             return table;
         }
     };
@@ -186,10 +226,11 @@ var TreeView;
     };
     TreeView.prototype.removeRow = function (index) {
         var tbody = this.table.getElementsByTagName('tbody')[0],
-            rows = tbody.getElementsByTagName('tr');
+            rows = tbody.getElementsByTagName('tr'),
+            row;
 
-        console.log(tbody, rows[index]);
-        tbody.removeChild(rows[index]);
+        row = tbody.removeChild(rows[index]);
+        row = null;
         this.fireEvent('removeRow', index);
     };
     TreeView.prototype.removeLastRow = function () {

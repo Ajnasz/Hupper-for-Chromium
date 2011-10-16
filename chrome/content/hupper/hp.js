@@ -1,6 +1,5 @@
 var HP;
 (function () {
-    // this.M = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
     var prefs = {};
     var getPref = function (n, cb) {
         var callback = function (response) {
@@ -44,7 +43,7 @@ var HP;
             },
             setIntPref: function (n, v, cb) {
                 setPref(n, v, cb);
-            },
+            }
         }
         this.get.M = this.set.M = this.M;
     };
@@ -158,6 +157,9 @@ var HP;
         hideboringcomments: function (cb) {
             return this.M.getBoolPref('extensions.hupper.hideboringcomments', cb);
         },
+        boringcommentcontents: function (cb) {
+            return this.M.getCharPref('extensions.hupper.boringcommentcontents', cb);
+        },
         trollCommentHeaderClass: function (cb) {
           cb({success: true, pref: {value: 'trollHeader', name: 'trollHeader'}})
         },
@@ -174,8 +176,6 @@ var HP;
           setPref(n, v, cb);
         },
         trolls: function (value, cb) {
-          console.log('set troll', value);
-          
           this.M.setCharPref('extensions.hupper.trolls', value, cb);
         },
         /**
@@ -263,6 +263,9 @@ var HP;
         },
         hideboringcomments: function (value, cb) {
             return this.M.setBoolPref('extensions.hupper.hideboringcomments', value, cb);
+        },
+        boringcommentcontents: function (value, cb) {
+            return this.M.setCharPref('extensions.hupper.boringcommentcontents', value, cb);
         }
       }
     };

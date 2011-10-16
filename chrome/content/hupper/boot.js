@@ -160,7 +160,7 @@ Hupper.boot = function(e) {
           if (element) {
               var user = element.innerHTML;
               HUP.hp.get.huppercolor(function (response) {
-                  var color = response.pref.value || '#A5FF9F';
+                  var color = response.pref.value || '#B5D7BE';
                   trollHandler.highlightUser(user, color, function () {
                       if (c) {
                           c.comments.forEach(function (comment) {

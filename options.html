@@ -32,6 +32,10 @@
           height: 1em;
           padding: 2px 5px;
       }
+      table.tree > tbody > tr > td > input {
+        width: 100%;
+      }
+
       #trollsTree td {
           width: 100%;
       }
@@ -119,6 +123,12 @@
           case "highlightusers":
             prefName = "extensions.hupper.highlightusers";
             break;
+          case "highlightuserscolor":
+            prefName = "extensions.hupper.huppercolor";
+            break;
+          case "boringcommentregexp":
+            prefName = "extensions.hupper.boringcommentcontents";
+            break;
         }
         return prefName;
     }
@@ -155,22 +165,40 @@
             return {name: {text: troll, editable: true}};
           });
           var tree = new TreeView('trollsTree', trolls);
-          tree.on('setCellText', function (o) {
-              if (!trolls[o.rowIndex]) {
-                  trolls[o.rowIndex] = {
-                      name: {
-                          text: '',
-                          editable: true
-                      }
-                  }
-                  tree.addEmptyRow();
-              }
-              trolls[o.rowIndex][o.colName].text = o.value;
+          var updateField = function () {
               field.value = trolls.map(function (troll) {
                   return troll.name.text;
               }).join(',');
+          };
+          var isEmpty = function (rowIndex) {
+              return trolls[rowIndex].name.text === '';
+          };
+          tree.on('setCellText', function (o) {
+              trolls[o.rowIndex][o.colName].text = o.value;
+              var len = trolls.length;
+              if (isEmpty(len - 1)) {
+                  while (isEmpty(len - 2) && isEmpty(len - 1)) {
+                      tree.removeLastRow();
+                      len = trolls.length;
+                  }
+              } else {
+                  tree.addEmptyRow();
+              }
           });
-          field.type = 'hidden';
+          tree.on('removeRow', function (index) {
+              var item = trolls.splice(index, 1);
+              item = null;
+          });
+          tree.on('emptyRowAdded', function () {
+              trolls[trolls.length] = {
+                  name: {
+                    text: '',
+                    editable: true
+                  }
+              };
+          });
+          tree.addEmptyRow();
+          // field.type = 'hidden';
       });
       hp.get.highlightusers(function (response) {
           var field = document.getElementById('highlightusers');
@@ -195,7 +223,6 @@
           tree.on('setCellText', function (o) {
               highlightUsers[o.rowIndex][o.colName].text = o.value;
               var len = highlightUsers.length;
-              
               if (isEmpty(len - 1)) {
                     while (isEmpty(len - 2) && isEmpty(len - 1)) {
                         tree.removeLastRow();
@@ -207,7 +234,8 @@
               updateField();
           });
           tree.on('removeRow', function (index) {
-              highlightUsers.splice(index, 1);
+              var item = highlightUsers.splice(index, 1);
+              item = null;
           });
           tree.on('emptyRowAdded', function () {
               highlightUsers[highlightUsers.length] = {
@@ -231,12 +259,15 @@
         var prefName = getPrefNameForElem(elem);
 
         hp.get.byName(prefName, function(response){
-          var value = response.pref.value;
-          if (elem.type.toUpperCase() === 'CHECKBOX') {
-            elem.checked = value;
-          } else {
-            elem.value = value;
-          }
+          var value = response.pref.value,
+              nodeName = elem.nodeName.toUpperCase();
+            if (nodeName === 'INPUT' || nodeName === 'SELECT' || nodeName === 'TEXTAREA') {
+                if (elem.type && elem.type.toUpperCase() === 'CHECKBOX') {
+                    elem.checked = value;
+                } else {
+                    elem.value = value;
+                }
+            }
         });
       });
     }
@@ -294,7 +325,7 @@
 
             <div id="trollsTree"></div>
 
-            <label for="trollcolor"> The background color of the header of troll comments</label><br>
+            <label for="trollcolor">The background color of the header of troll comments</label><br>
             <input type="input" id="trollcolor"><br>
 
             <label for="trollfiltermethod">Effect to filter troll comments</label><br>
@@ -306,8 +337,9 @@
             <label for="trollfilterHideanswers">Hide answers to troll comments</label>
           </fieldset>
           <fieldset>
-            <label for="highlightusers">Highlight user comments:</label><br>
+            <label for="highlightuserscolor">Default highlight color:</label><br>
             <input type="input" id="highlightusers">
+            <input type="input" id="highlightuserscolor">
             <div id="highlightusersTree"></div>
           </fieldset>
           <fieldset>
@@ -319,6 +351,10 @@
             <input type="text" id="sidebarwidth"><br>
             <label for="minfontsize">Minimum font size</label><br>
             <input type="text" id="minfontsize"><br>
+          </fieldset>
+          <fieldset>
+            <label>Boring comment regexp</label><br />
+            <input type="text" id="boringcommentregexp" />
           </fieldset>
       </form>
     <br>
