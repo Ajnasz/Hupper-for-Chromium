@@ -70,6 +70,9 @@ Hupper.boot = function(e) {
             case 'markingProgress':
               output = 'marking...';
               break;
+            case 'restoreNodes':
+              output = 'Restore hidden articles';
+              break;
             default:
               output = 'text bundle is undefined: ' + n;
               break;
