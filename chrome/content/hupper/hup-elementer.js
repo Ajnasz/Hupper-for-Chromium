@@ -269,8 +269,9 @@ Hupper.Elementer.prototype = {
     // try to use the native getElementsByClassName method
     if(document.getElementsByClassName) {
       var ts = Array.prototype.slice.call(par.getElementsByClassName(cn));
-      return el == '*' ? ts : ts.filter(function(elem) {;
-      return elem.nodeName == el;});
+      return el == '*' ? ts : ts.filter(function(elem) {
+        return elem.nodeName == el;
+      });
     } else {
       var ts = this.GetTag(el, par);
       for(var i = 0, tsl = ts.length; i < tsl; i++) {
