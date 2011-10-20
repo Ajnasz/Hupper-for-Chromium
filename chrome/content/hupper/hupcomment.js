@@ -1,4 +1,4 @@
-(function() {
+(function () {
     var plusOneRex = new RegExp('(?:^|\\s)\\+1(?:$|\\s|\\.)'),
         minusOneRex = new RegExp('(?:^|\\s)-1(?:$|\\s|\\.)'),
         commentClasses = null;
@@ -35,13 +35,13 @@
         this.getParent(indentComments, comments);
         this.plusPoints = [];
         this.minusPoints = [];
-        if (this.parent != -1) {
+        if (this.parent !== -1) {
             this.getPlusOrMinus();
             this.addLinkToParent();
             // this.parent.cont.innerHTML += '<a href="#'+this.id+'">' + this.user + '</a>, ';
             if (this.plusOne || this.minusOne) {
                 if (this.plusOne) {
-                    this.parent.addPoint(1, this)
+                    this.parent.addPoint(1, this);
                 } else {
                     this.parent.addPoint(-1, this);
                 }
@@ -62,7 +62,7 @@
         * @returns the childcomment container of a comment or -1
         * @type {Element,Number}
         */
-        getChildComment: function() {
+        getChildComment: function () {
             var children = this.comment.nextSibling.nextSibling;
             if(HUP.El.HasClass(children, 'indented')) {
                 this.children = children;
@@ -73,9 +73,9 @@
         /**
         * Get the indent level of the element
         */
-        getIndent: function() {
+        getIndent: function () {
             var indent = 0, elem = this.comment;
-            while(HUP.El.HasClass(elem.parentNode, 'indented')) {
+            while (HUP.El.HasClass(elem.parentNode, 'indented')) {
                 elem = elem.parentNode;
                 indent++;
             }
@@ -103,7 +103,7 @@
         /**
         * checks the comment, and if it has been posted "today", than adds the "új" text to it's header
         */
-        todayComment: function() {
+        todayComment: function () {
           var _comment = this;
           var today =  new Date();
           if(this.date.getFullYear() == today.getFullYear() && this.date.getMonth() == today.getMonth() && this.date.getDate() == today.getDate()) {
@@ -115,7 +115,7 @@
             HUP.El.Insert(a, _comment.comment.firstChild);
           }
         },
-        newComment: function() {
+        newComment: function () {
             var newNodes = HUP.El.GetByClass(this.comment, 'new', 'span');
             this.newComm = newNodes.length ? newNodes[0] : false;
         },
@@ -125,7 +125,7 @@
         * @param {Array} indentedComments
         * @param {Array} all comments
         */
-        getParent: function(indentComments, comments) {
+        getParent: function (indentComments, comments) {
             var parent = (this.indent > 0 && indentComments[(this.indent-1)]) ? indentComments[(this.indent - 1)][(indentComments[(this.indent - 1)].length - 1)] : false;
             this.parent = (typeof parent != 'undefined' && parent !== false) ? comments[parent] : -1;
         },
@@ -134,13 +134,13 @@
         * @returns the converted Date object
         * @type Date
         */
-        getDate: function() {
+        getDate: function () {
             var a = this.deletedUser ? this.header.textContent : this.header.childNodes[2].textContent;
             var outObj = {};
             var dayNames = {'hétfő': 1, 'kedd': 2, 'szerda': 3, 'csütörtök': 4, 'péntek': 5, 'szombat': 6, 'vasárnap': 7};
             var monthNames = {'január': 0, 'február': 1, 'március': 2, 'április': 3, 'május': 4, 'június': 5, 'július': 6, 'augusztus': 7, 'szeptember': 8, 'október': 9, 'november': 10, 'december': 11};
             var dateRex = new RegExp(/[\s\|]+([0-9]+)\.\s([a-zúőűáéóüöí]+)\s+([0-9]+)\.,\s+([a-zűáéúőóüöí]+)\s+-\s+(\d+):(\d+).*/);
-            a.replace(dateRex, function(all, year, month, day, dayname, hour, min) {
+            a.replace(dateRex, function (all, year, month, day, dayname, hour, min) {
                 var date = new Date();
                 date.setYear(year);
                 date.setMonth(monthNames[month]);
@@ -155,14 +155,14 @@
         * @returns check that the user is still a member of the site or not
         * @type {Boolean}
         */
-        isDeletedUser: function() {
+        isDeletedUser: function () {
             this.deletedUser = this.header.getElementsByTagName('a').length == 0;
         },
         /**
         * adds the defined color to the comments header
         * @param {String} color
         */
-        highLightComment: function(color) {
+        highLightComment: function (color) {
           if (/[0-9a-f#]+/i.test(color)) { // hexa
             if (!/^#/.test(color)) {
               color = '#' + color;
@@ -183,16 +183,14 @@
         setTroll: function () {
             this.troll = true;
             var me = this;
-            HUP.L.log('set troll')
-            HUP.hp.get.trollCommentClass(function(response) {
-                HUP.L.log(response.pref.value)
+            HUP.hp.get.trollCommentClass(function (response) {
                 HUP.El.AddClass(me.comment, response.pref.value);
             });
-            HUP.hp.get.trollCommentHeaderClass(function(response) {
+            HUP.hp.get.trollCommentHeaderClass(function (response) {
                 HUP.El.AddClass(me.header, response.pref.value);
             });
             if(this.children != -1) {
-                HUP.hp.get.trollCommentAnswersClass(function(response) {
+                HUP.hp.get.trollCommentAnswersClass(function (response) {
                     HUP.El.AddClass(me.children, response.pref.value);
                 });
             }
@@ -200,14 +198,14 @@
         unsetTroll: function () {
             this.troll = false;
             var me = this;
-            HUP.hp.get.trollCommentClass(function(response) {
+            HUP.hp.get.trollCommentClass(function (response) {
                 HUP.El.RemoveClass(me.comment, response.pref.value);
             });
-            HUP.hp.get.trollCommentHeaderClass(function(response) {
+            HUP.hp.get.trollCommentHeaderClass(function (response) {
                 HUP.El.RemoveClass(me.header, response.pref.value);
             });
-            if(this.children != -1) {
-              HUP.hp.get.trollCommentAnswersClass(function(response) {
+            if(this.children !== -1) {
+              HUP.hp.get.trollCommentAnswersClass(function (response) {
                   HUP.El.RemoveClass(me.children, response.pref.value);
               });
             }
@@ -215,17 +213,17 @@
         /**
         * highligts the header of the node if the user is a troll
         */
-        highlightTroll: function()  {
+        highlightTroll: function ()  {
           this.setTroll();
           /*
           var _this = this;;
           if (!commentClasses) {
-            HUP.hp.get.trollCommentClass(function(response) {
+            HUP.hp.get.trollCommentClass(function (response) {
               commentClasses = {};
               commentClasses.trollCommentClass = response.pref.value;
-              HUP.hp.get.trollCommentHeaderClass(function(response) {
+              HUP.hp.get.trollCommentHeaderClass(function (response) {
                 commentClasses.trollCommentHeaderClass = response.pref.value;
-                HUP.hp.get.trollCommentAnswersClass(function(response) {
+                HUP.hp.get.trollCommentAnswersClass(function (response) {
                   commentClasses.trollCommentAnswersClass = response.pref.value;
                   _this._highlightComment();
                 });
@@ -239,7 +237,7 @@
         /**
         * @param {Hupper.NodeHeaderBuilder} builder
         */
-        addExtraLinks: function(builder) {
+        addExtraLinks: function (builder) {
           HUP.El.Add(builder.buildComExtraTop(), this.footerLinks);
           HUP.El.Add(builder.buildComExtraBack(), this.footerLinks);
         },
@@ -248,34 +246,34 @@
         * @param {Hupper.NodeHeaderBuilder} builder
         * @param {Element} tmpSpan1
         */
-        replaceNewCommentText: function(builder, tmpSpan1) {
+        replaceNewCommentText: function (builder, tmpSpan1) {
           HUP.El.Remove(this.newComm, this.comment);
           HUP.El.Add(builder.buildNewText(), tmpSpan1);
         },
         /**
         * @param {Hupper.NodeHeaderBuilder} builder
         */
-        addComExtraParent: function(builder) {
+        addComExtraParent: function (builder) {
           HUP.El.Add(builder.buildComExtraParent(this.parent), this.footerLinks);
         },
         /**
         * @param {Object} users
         */
-        highlightComment: function(users) {
+        highlightComment: function (users) {
           if (users[this.user]) {
             this.highLightComment(users[this.user]);
           }
         },
         plusOne: false,
         minusOne: false,
-        getPlusOrMinus: function() {
+        getPlusOrMinus: function () {
           if(this.isPlusOne()) {
             this.plusOne = true;
           } else if(this.isMinusOne()) {
             this.minusOne = true;
           }
         },
-        isPlusOne: function() {
+        isPlusOne: function () {
           var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
           return plusOneRex.test(firstParagraph.innerHTML);
         },
@@ -293,23 +291,23 @@
             cb(false);
           }
         },
-        isMinusOne: function() {
+        isMinusOne: function () {
           var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
           return minusOneRex.test(firstParagraph.innerHTML);
         },
-        addPoint: function(direction, comment) {
+        addPoint: function (direction, comment) {
           if(direction > 0) {
             this.plusPoints.push(comment);
           } else if(direction < 0) {
             this.minusPoints.push(comment);
           }
         },
-        showPoints: function(direction, comment) {
+        showPoints: function (direction, comment) {
           if(!this.plusPoints.length && !this.minusPoints.length) return;
           /**
           * @param {Hupper.Comment} comment a HUPComment object
           */
-          var createPoint = function(comment) {
+          var createPoint = function (comment) {
             var point = HUP.El.Li();
             HUP.El.AddClass(point, 'point');
             HUP.El.Add(HUP.El.CreateLink(comment.user, '#' + comment.id), point);
@@ -321,10 +319,10 @@
           /**
           * show/hide the point details of the comment
           */
-          var togglePoints = function(event) {
+          var togglePoints = function (event) {
             if(HUP.El.HasClass(this.parentNode, 'show')) {
               var _this = this;
-              new Transform(HUP.El.GetByClass(this.parentNode, 'point-details')[0], 'SlideUp', {onEnd: function() {
+              new Transform(HUP.El.GetByClass(this.parentNode, 'point-details')[0], 'SlideUp', {onEnd: function () {
                 HUP.El.RemoveClass(_this.parentNode, 'show');
               }});
             } else {
@@ -351,7 +349,7 @@
             HUP.El.Add(type, this.plusContainer);
             this.plusContainer.setAttribute('title','plus');
 
-            this.plusPoints.forEach(function(comment) {
+            this.plusPoints.forEach(function (comment) {
               HUP.El.Add(createPoint(comment), _this.plusContainer);
             })
             HUP.El.Add(this.plusContainer, this.pointDetails);
@@ -363,7 +361,7 @@
             HUP.El.AddClass(type, 'type');
             HUP.El.Add(HUP.El.Txt('minus'), type);
             HUP.El.Add(type, this.minusContainer);
-            this.minusPoints.forEach(function(comment){
+            this.minusPoints.forEach(function (comment) {
               HUP.El.Add(createPoint(comment), _this.minusContainer);
             })
             HUP.El.Add(this.minusContainer, this.pointDetails);
@@ -378,7 +376,7 @@
     * @namespace Hupper
     * @description A class to handle all of the comments on the page
     */
-    Hupper.GetComments = function() {
+    Hupper.GetComments = function () {
       this.getComments();
       this.parseComments();
     };
@@ -388,8 +386,10 @@
       * @returns a Hupper.Comment object or null
       * @type {Hupper.Comment,NULL}
       */
-      get: function(element) {
-        var comments = this.comments.filter(function(c){return c.comment == element});
+      get: function (element) {
+        var comments = this.comments.filter(function (c) {
+            return c.comment == element
+        });
         return (comments.length) ? comments[0] : null;
       },
       getComments: function () {
@@ -407,7 +407,7 @@
           this.indentComments = [];
           this.newComments = [];
           _this = this;
-          ds.forEach(function(c) {
+          ds.forEach(function (c) {
               var comment = new Hupper.Comment(c, _this.indentComments, _this.comments, _this);
               if(typeof _this.indentComments[comment.indent] == 'undefined') {
                   _this.indentComments[comment.indent] = [];
@@ -429,32 +429,32 @@
         insertPermalink = prefs.insertPermalink,
         highlightUsers = prefs.highlightUsers.split(','),
         hh = {}, bh;
-        highlightUsers.forEach(function(hluser) {
+        highlightUsers.forEach(function (hluser) {
             bh = hluser.split(':');
             hh[bh[0]] = bh[1];
         });
         var builder = new Hupper.NodeHeaderBuilder(), ps;
         try {
-            this.comments.forEach(function(C) {
-                if(filtertrolls && Hupper.inArray(C.user, trolls.split(','))) {
+            this.comments.forEach(function (C) {
+                if (filtertrolls && Hupper.inArray(C.user, trolls.split(','))) {
                     C.setTroll();
                 }
-                if(extraCommentLinks) {
+                if (extraCommentLinks) {
                     C.addExtraLinks(builder);
                 }
-                if(C.parent != -1) {
+                if (C.parent != -1) {
                     C.addComExtraParent(builder);
                 }
-                if(insertPermalink) {
+                if (insertPermalink) {
                     HUP.El.Add(builder.buildComExtraPerma(C.id), C.footerLinks);
                 }
                 C.highlightComment(hh);
                 C.showPoints();
             });
-        } catch(e) {
+        } catch (e) {
             HUP.L.log(e.message, e.lineNumber, e.fileName);
         }
-        if(replacenewcommenttext || prevnextlinks) {
+        if (replacenewcommenttext || prevnextlinks) {
             var spanNode = HUP.El.Span(), tmpSpan1;
             for(var i = 0, ncl = this.newComments.length; i < ncl; i++) {
                 tmpSpan1 = spanNode.cloneNode(true);
@@ -471,25 +471,25 @@
             }
         }
       },
-      parseComments: function() {
+      parseComments: function () {
         // if (!prefs) {
           var prefs = {};
           var _this = this;
-          HUP.hp.get.replacenewcommenttext(function(response) {
+          HUP.hp.get.replacenewcommenttext(function (response) {
             prefs.replacenewcommenttext = response.pref.value;
-            HUP.hp.get.prevnextlinks(function(response) {
+            HUP.hp.get.prevnextlinks(function (response) {
               prefs.prevnextlinks = response.pref.value;
-              HUP.hp.get.trolls(function(response) {
+              HUP.hp.get.trolls(function (response) {
                 prefs.trolls = response.pref.value;
-                HUP.hp.get.filtertrolls(function(response) {
+                HUP.hp.get.filtertrolls(function (response) {
                   prefs.filtertrolls = response.pref.value;
-                  HUP.hp.get.huppers(function(response) {
+                  HUP.hp.get.huppers(function (response) {
                     prefs.huppers = response.pref.value;
-                    HUP.hp.get.extracommentlinks(function(response) {
+                    HUP.hp.get.extracommentlinks(function (response) {
                       prefs.extraCommentLinks = response.pref.value;
-                      HUP.hp.get.insertpermalink(function(response) {
+                      HUP.hp.get.insertpermalink(function (response) {
                         prefs.insertPermalink = response.pref.value;
-                        HUP.hp.get.highlightusers(function(response) {
+                        HUP.hp.get.highlightusers(function (response) {
                           prefs.highlightUsers = response.pref.value;
                           _this._parseComments(prefs);
                         });
