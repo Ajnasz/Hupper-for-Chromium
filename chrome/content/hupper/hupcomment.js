@@ -1,3 +1,4 @@
+/*global Hupper: true, HUP: true, Transform: true */
 (function () {
     var plusOneRex = new RegExp('(?:^|\\s)\\+1(?:$|\\s|\\.)'),
         minusOneRex = new RegExp('(?:^|\\s)-1(?:$|\\s|\\.)'),
@@ -64,7 +65,7 @@
         */
         getChildComment: function () {
             var children = this.comment.nextSibling.nextSibling;
-            if(HUP.El.HasClass(children, 'indented')) {
+            if (HUP.El.HasClass(children, 'indented')) {
                 this.children = children;
             } else {
                 this.children = -1;
@@ -90,30 +91,35 @@
                 }
             });
             if (!replies.length) {
-              replies = HUP.El.Div();
-              HUP.El.AddClass(replies, 'hup-replies');
-              HUP.El.Add(HUP.El.Txt('replies: '), replies);
-              HUP.El.Add(replies, this.parent.cont);
+                replies = HUP.El.Div();
+                HUP.El.AddClass(replies, 'hup-replies');
+                HUP.El.Add(HUP.El.Txt('replies: '), replies);
+                HUP.El.Add(replies, this.parent.cont);
             } else {
-              replies = replies[0];
-              HUP.El.Add(HUP.El.Txt(', '), replies);
+                replies = replies[0];
+                HUP.El.Add(HUP.El.Txt(', '), replies);
             }
             HUP.El.Add(link, replies);
         },
         /**
-        * checks the comment, and if it has been posted "today", than adds the "új" text to it's header
+        * checks the comment, and if it has been posted "today", than adds the
+        * "új" text to it's header
         */
         todayComment: function () {
-          var _comment = this;
-          var today =  new Date();
-          if(this.date.getFullYear() == today.getFullYear() && this.date.getMonth() == today.getMonth() && this.date.getDate() == today.getDate()) {
-            var s = HUP.El.Span(), a = HUP.El.A();
-            HUP.El.AddClass(s, 'new');
-            HUP.El.Add(HUP.El.Txt('új'), s);
-            HUP.El.Insert(s, _comment.comment.firstChild);
-            a.setAttribute('id', 'new');
-            HUP.El.Insert(a, _comment.comment.firstChild);
-          }
+            var _comment = this,
+                today = new Date(),
+                s, a;
+            if (this.date.getFullYear() === today.getFullYear() &&
+                this.date.getMonth() === today.getMonth() &&
+                this.date.getDate() === today.getDate()) {
+                s = HUP.El.Span();
+                a = HUP.El.A();
+                HUP.El.AddClass(s, 'new');
+                HUP.El.Add(HUP.El.Txt('új'), s);
+                HUP.El.Insert(s, _comment.comment.firstChild);
+                a.setAttribute('id', 'new');
+                HUP.El.Insert(a, _comment.comment.firstChild);
+            }
         },
         newComment: function () {
             var newNodes = HUP.El.GetByClass(this.comment, 'new', 'span');
@@ -126,8 +132,11 @@
         * @param {Array} all comments
         */
         getParent: function (indentComments, comments) {
-            var parent = (this.indent > 0 && indentComments[(this.indent-1)]) ? indentComments[(this.indent - 1)][(indentComments[(this.indent - 1)].length - 1)] : false;
-            this.parent = (typeof parent != 'undefined' && parent !== false) ? comments[parent] : -1;
+            var parent = (this.indent > 0 && indentComments[(this.indent - 1)]) ?
+                indentComments[(this.indent - 1)][(indentComments[(this.indent - 1)].length - 1)] :
+                false;
+            this.parent = (typeof parent !== 'undefined' && parent !== false) ?
+                comments[parent] : -1;
         },
         /**
         * converts the post date of a comment to a javascript Date object
@@ -135,11 +144,33 @@
         * @type Date
         */
         getDate: function () {
-            var a = this.deletedUser ? this.header.textContent : this.header.childNodes[2].textContent;
-            var outObj = {};
-            var dayNames = {'hétfő': 1, 'kedd': 2, 'szerda': 3, 'csütörtök': 4, 'péntek': 5, 'szombat': 6, 'vasárnap': 7};
-            var monthNames = {'január': 0, 'február': 1, 'március': 2, 'április': 3, 'május': 4, 'június': 5, 'július': 6, 'augusztus': 7, 'szeptember': 8, 'október': 9, 'november': 10, 'december': 11};
-            var dateRex = new RegExp(/[\s\|]+([0-9]+)\.\s([a-zúőűáéóüöí]+)\s+([0-9]+)\.,\s+([a-zűáéúőóüöí]+)\s+-\s+(\d+):(\d+).*/);
+            var a = this.deletedUser ?
+                this.header.textContent : this.header.childNodes[2].textContent,
+                outObj = {},
+                dayNames = {
+                    'hétfő': 1,
+                    'kedd': 2,
+                    'szerda': 3,
+                    'csütörtök': 4,
+                    'péntek': 5,
+                    'szombat': 6,
+                    'vasárnap': 7
+                },
+                monthNames = {
+                    'január': 0,
+                    'február': 1,
+                    'március': 2,
+                    'április': 3,
+                    'május': 4,
+                    'június': 5,
+                    'július': 6,
+                    'augusztus': 7,
+                    'szeptember': 8,
+                    'október': 9,
+                    'november': 10,
+                    'december': 11
+                },
+                dateRex = new RegExp(/[\s\|]+([0-9]+)\.\s([a-zúőűáéóüöí]+)\s+([0-9]+)\.,\s+([a-zűáéúőóüöí]+)\s+-\s+(\d+):(\d+).*/);
             a.replace(dateRex, function (all, year, month, day, dayname, hour, min) {
                 var date = new Date();
                 date.setYear(year);
@@ -156,19 +187,19 @@
         * @type {Boolean}
         */
         isDeletedUser: function () {
-            this.deletedUser = this.header.getElementsByTagName('a').length == 0;
+            this.deletedUser = this.header.getElementsByTagName('a').length === 0;
         },
         /**
         * adds the defined color to the comments header
         * @param {String} color
         */
         highLightComment: function (color) {
-          if (/[0-9a-f#]+/i.test(color)) { // hexa
-            if (!/^#/.test(color)) {
-              color = '#' + color;
+            if (/[0-9a-f#]+/i.test(color)) { // hexa
+                if (!/^#/.test(color)) {
+                    color = '#' + color;
+                }
             }
-          }
-          this.header.style.backgroundColor = color;
+            this.header.style.backgroundColor = color;
         },
         unhighLightComment: function () {
             this.header.style.backgroundColor = '';
@@ -176,7 +207,7 @@
         _highlightComment: function () {
             HUP.El.AddClass(this.comment, commentClasses.trollCommentClass);
             HUP.El.AddClass(this.header, commentClasses.trollCommentHeaderClass);
-            if(this.children != -1) {
+            if (this.children !== -1) {
                 HUP.El.AddClass(this.children, commentClasses.trollCommentAnswersClass);
             }
         },
@@ -189,7 +220,7 @@
             HUP.hp.get.trollCommentHeaderClass(function (response) {
                 HUP.El.AddClass(me.header, response.pref.value);
             });
-            if(this.children != -1) {
+            if (this.children !== -1) {
                 HUP.hp.get.trollCommentAnswersClass(function (response) {
                     HUP.El.AddClass(me.children, response.pref.value);
                 });
@@ -204,42 +235,42 @@
             HUP.hp.get.trollCommentHeaderClass(function (response) {
                 HUP.El.RemoveClass(me.header, response.pref.value);
             });
-            if(this.children !== -1) {
-              HUP.hp.get.trollCommentAnswersClass(function (response) {
-                  HUP.El.RemoveClass(me.children, response.pref.value);
-              });
+            if (this.children !== -1) {
+                HUP.hp.get.trollCommentAnswersClass(function (response) {
+                    HUP.El.RemoveClass(me.children, response.pref.value);
+                });
             }
         },
         /**
         * highligts the header of the node if the user is a troll
         */
-        highlightTroll: function ()  {
-          this.setTroll();
-          /*
-          var _this = this;;
-          if (!commentClasses) {
-            HUP.hp.get.trollCommentClass(function (response) {
-              commentClasses = {};
-              commentClasses.trollCommentClass = response.pref.value;
-              HUP.hp.get.trollCommentHeaderClass(function (response) {
-                commentClasses.trollCommentHeaderClass = response.pref.value;
-                HUP.hp.get.trollCommentAnswersClass(function (response) {
-                  commentClasses.trollCommentAnswersClass = response.pref.value;
-                  _this._highlightComment();
+        highlightTroll: function () {
+            this.setTroll();
+            /*
+            var _this = this;;
+            if (!commentClasses) {
+              HUP.hp.get.trollCommentClass(function (response) {
+                commentClasses = {};
+                commentClasses.trollCommentClass = response.pref.value;
+                HUP.hp.get.trollCommentHeaderClass(function (response) {
+                  commentClasses.trollCommentHeaderClass = response.pref.value;
+                  HUP.hp.get.trollCommentAnswersClass(function (response) {
+                    commentClasses.trollCommentAnswersClass = response.pref.value;
+                    _this._highlightComment();
+                  });
                 });
               });
-            });
-          } else {
-            this._highlightComment();
-          }
-          */
+            } else {
+              this._highlightComment();
+            }
+            */
         },
         /**
         * @param {Hupper.NodeHeaderBuilder} builder
         */
         addExtraLinks: function (builder) {
-          HUP.El.Add(builder.buildComExtraTop(), this.footerLinks);
-          HUP.El.Add(builder.buildComExtraBack(), this.footerLinks);
+            HUP.El.Add(builder.buildComExtraTop(), this.footerLinks);
+            HUP.El.Add(builder.buildComExtraBack(), this.footerLinks);
         },
         /**
         * replace the 'uj' text in the header of newly posted comments
@@ -247,60 +278,60 @@
         * @param {Element} tmpSpan1
         */
         replaceNewCommentText: function (builder, tmpSpan1) {
-          HUP.El.Remove(this.newComm, this.comment);
-          HUP.El.Add(builder.buildNewText(), tmpSpan1);
+            HUP.El.Remove(this.newComm, this.comment);
+            HUP.El.Add(builder.buildNewText(), tmpSpan1);
         },
         /**
         * @param {Hupper.NodeHeaderBuilder} builder
         */
         addComExtraParent: function (builder) {
-          HUP.El.Add(builder.buildComExtraParent(this.parent), this.footerLinks);
+            HUP.El.Add(builder.buildComExtraParent(this.parent), this.footerLinks);
         },
         /**
         * @param {Object} users
         */
         highlightComment: function (users) {
-          if (users[this.user]) {
-            this.highLightComment(users[this.user]);
-          }
+            if (users[this.user]) {
+                this.highLightComment(users[this.user]);
+            }
         },
         plusOne: false,
         minusOne: false,
         getPlusOrMinus: function () {
-          if(this.isPlusOne()) {
-            this.plusOne = true;
-          } else if(this.isMinusOne()) {
-            this.minusOne = true;
-          }
+            if (this.isPlusOne()) {
+                this.plusOne = true;
+            } else if (this.isMinusOne()) {
+                this.minusOne = true;
+            }
         },
         isPlusOne: function () {
-          var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
-          return plusOneRex.test(firstParagraph.innerHTML);
+            var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
+            return plusOneRex.test(firstParagraph.innerHTML);
         },
         isBoringComment: function (cb) {
-          var paragraphs = HUP.El.GetTag('p', this.cont),
-              trimComment;
-          if (paragraphs.length === 1) {
-            trimComment = paragraphs[0].innerHTML.replace(/^\s*|\s*$/g, '');
-            HUP.hp.get.boringcommentcontents(function (response) {
-                var rex = new RegExp(response.pref.value);
-                output = rex.test(trimComment);
-                cb(output);
-            });
-          } else {
-            cb(false);
-          }
+            var paragraphs = HUP.El.GetTag('p', this.cont),
+                trimComment;
+            if (paragraphs.length === 1) {
+                trimComment = paragraphs[0].innerHTML.replace(/^\s*|\s*$/g, '');
+                HUP.hp.get.boringcommentcontents(function (response) {
+                    var rex = new RegExp(response.pref.value),
+                        output = rex.test(trimComment);
+                    cb(output);
+                });
+            } else {
+                cb(false);
+            }
         },
         isMinusOne: function () {
-          var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
-          return minusOneRex.test(firstParagraph.innerHTML);
+            var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
+            return minusOneRex.test(firstParagraph.innerHTML);
         },
         addPoint: function (direction, comment) {
-          if(direction > 0) {
-            this.plusPoints.push(comment);
-          } else if(direction < 0) {
-            this.minusPoints.push(comment);
-          }
+            if (direction > 0) {
+                this.plusPoints.push(comment);
+            } else if (direction < 0) {
+                this.minusPoints.push(comment);
+            }
         },
         showPoints: function (direction, comment) {
           if(!this.plusPoints.length && !this.minusPoints.length) return;
