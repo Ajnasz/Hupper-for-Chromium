@@ -1,8 +1,19 @@
 var HP;
 (function () {
     var prefs = {};
-    var getPref = function (n, cb) {
+    var getPref = function (n, cb, type) {
         var callback = function (response) {
+            switch (type) {
+            case 'bool':
+                response.pref.value = response.pref.value && response.pref.value !== "false";
+                break;
+            case 'int':
+                response.pref.value = parseInt(response.pref.value, 10);
+                break;
+            case 'char':
+                response.pref.value = response.pref.value.toString();
+                break;
+            }
             prefs[response.pref.name] = response.pref.value;
             if (typeof cb === 'function') {
                 cb(response);
@@ -27,13 +38,13 @@ var HP;
     HP = function () {
         this.M = {
             getBoolPref: function (n, cb) {
-                getPref(n, cb);
+                getPref(n, cb, 'bool');
             },
             getCharPref: function (n, cb) {
-                getPref(n, cb);
+                getPref(n, cb, 'char');
             },
             getIntPref: function (n, cb) {
-                getPref(n, cb);
+                getPref(n, cb, 'int');
             },
             setBoolPref: function (n, v, cb) {
                 setPref(n, v, cb);
