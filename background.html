@@ -84,7 +84,7 @@
             } else {
                 chrome.tabs.insertCSS(sender.tab.id, {code: request.style}, cb);
             }
-          } else if(typeof request.pref !== '') {
+          } else if(request.pref) {
               if (typeof request.pref.value !== 'undefined') {
                   Prefs.set(request.pref.name, request.pref.value);
               }
