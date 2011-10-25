@@ -209,5 +209,48 @@ Hupper.boot = function(e) {
                   break;
           }
       });
+      HUP.hp.get.setunlimitedlinks(function (response) {
+          if (response.pref.value) {
+              var linkParams = [
+                  '/cikkek',
+                  '/node',
+                  '/promo'
+              ], callStr = [];
+              linkParams.forEach(function (link) {
+                  callStr.push('a[href^="' + link + '"]');
+                  callStr.push('a[href^="' + link + '"]');
+                  callStr.push('a[href^="' + link + '"]');
+                  callStr.push('a[href^=" ' + link + '"]');
+                  callStr.push('a[href^=" ' + link + '"]');
+                  callStr.push('a[href^=" ' + link + '"]');
+                  callStr.push('a[href^="http://hup.hu' + link + '"]');
+                  callStr.push('a[href^="http://hup.hu' + link + '"]');
+                  callStr.push('a[href^="http://hup.hu' + link + '"]');
+                  callStr.push('a[href^=" http://hup.hu' + link + '"]');
+                  callStr.push('a[href^=" http://hup.hu' + link + '"]');
+                  callStr.push('a[href^=" http://hup.hu' + link + '"]');
+                  callStr.push('a[href^="http://www.hup.hu' + link + '"]');
+                  callStr.push('a[href^="http://www.hup.hu' + link + '"]');
+                  callStr.push('a[href^="http://www.hup.hu' + link + '"]');
+                  callStr.push('a[href^=" http://www.hup.hu' + link + '"]');
+                  callStr.push('a[href^=" http://www.hup.hu' + link + '"]');
+                  callStr.push('a[href^=" http://www.hup.hu' + link + '"]');
+              });
+              HUP.L.log(callStr);
+              Array.prototype.slice
+                  .call(HUP.w.querySelectorAll(callStr.join(',')))
+                  .forEach(function (elem) {
+                  var link = elem.href,
+                      parts = link.split('#');
+                  if (parts[0].indexOf('?') > -1) {
+                      parts[0] += '&';
+                  } else {
+                      parts[0] += '?';
+                  }
+                  parts[0] += 'comments_per_page=9999';
+                  elem.href = parts.join('#');
+              });
+          }
+      });
     }
 };

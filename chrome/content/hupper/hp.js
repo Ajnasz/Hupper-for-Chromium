@@ -171,6 +171,9 @@ var HP;
         boringcommentcontents: function (cb) {
             return this.M.getCharPref('extensions.hupper.boringcommentcontents', cb);
         },
+        setunlimitedlinks: function (cb) {
+            return this.M.getBoolPref('extensions.hupper.setunlimitedlinks', cb);
+        },
         trollCommentHeaderClass: function (cb) {
           cb({success: true, pref: {value: 'trollHeader', name: 'trollHeader'}})
         },
@@ -277,7 +280,10 @@ var HP;
         },
         boringcommentcontents: function (value, cb) {
             return this.M.setCharPref('extensions.hupper.boringcommentcontents', value, cb);
-        }
+        },
+        setunlimitedlinks: function (cb) {
+            return this.M.setBoolPref('extensions.hupper.setunlimitedlinks', value, cb);
+        },
       }
     };
 }());
