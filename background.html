@@ -101,13 +101,12 @@
       });
       var onContextClick = function (type) {
           return function (e) {
-              console.log(e);
               chrome.tabs.getSelected(null, function (tab) {
                   chrome.tabs.sendRequest(tab.id, {
                       type: type,
                       ev: e
                     }, function () {
-                      console.log(cb)
+                      // console.log(cb)
                   });
               });
           }

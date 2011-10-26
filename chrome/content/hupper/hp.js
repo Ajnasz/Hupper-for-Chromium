@@ -201,7 +201,7 @@ var HP;
         },
         trollfiltermethod: function (value, cb) {
           // hide, hilig, cbht
-          this.M.setCharPref('extensions.hupper.trollfiltermethod', value);
+          this.M.setCharPref('extensions.hupper.trollfiltermethod', value, cb);
         },
         trollcolor: function (value, cb) {
           this.M.setCharPref('extensions.hupper.trollcolor', value, cb);
@@ -281,7 +281,7 @@ var HP;
         boringcommentcontents: function (value, cb) {
             return this.M.setCharPref('extensions.hupper.boringcommentcontents', value, cb);
         },
-        setunlimitedlinks: function (cb) {
+        setunlimitedlinks: function (value, cb) {
             return this.M.setBoolPref('extensions.hupper.setunlimitedlinks', value, cb);
         },
       }

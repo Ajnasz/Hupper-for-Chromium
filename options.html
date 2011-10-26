@@ -82,29 +82,60 @@
     // Saves options to localStorage.
 
     var hp = new HP();
+    var prefItems = [
+        {id: 'enabletrollfilter', prefName: 'filtertrolls'},
+        {id: 'trolls', prefName: 'trolls'},
+        {id: 'trollcolor', prefName: 'trollcolor'},
+        {id: 'trollfiltermethod', prefName: 'trollfiltermethod'},
+        // {id: 'HUP-enable-hupperfilter', prefName: 'filterhuppers'},
+        // {id: 'huppers', prefName: 'huppers'},
+        // {id: 'HUP-hupper-color', prefName: 'huppercolor'},
+        {id: 'enablenewcommentchange', prefName: 'replacenewcommenttext'},
+        {id: 'newcommenttext', prefName: 'newcommenttext'},
+        {id: 'extracommentlinks', prefName: 'extracommentlinks'},
+        {id: 'hilightforumlinesonhover', prefName: 'hilightforumlinesonhover'},
+        {id: 'insertpermalink', prefName: 'insertpermalink'},
+        {id: 'insertnewtexttonode', prefName: 'insertnewtexttonode'},
+        {id: 'fadeparentcomment', prefName: 'fadeparentcomment'},
+        {id: 'showquicknavbox', prefName: 'showqnavbox'},
+        {id: 'trollfilterHideanswers', prefName: 'hidetrollanswers'},
+        {id: 'highlightusers', prefName: 'highlightusers'},
+        {id: 'hidetaxonomy', prefName: 'hidetaxonomy'},
+        {id: 'showinstatusbar', prefName: 'showinstatusbar'},
+        {id: 'parseblocks', prefName: 'parseblocks'},
+        {id: 'indent', prefName: 'styleIndent'},
+        {id: 'accessibility', prefName: 'styleAccessibility'},
+        {id: 'sidebarwidth', prefName: 'styleWiderSidebar'},
+        {id: 'minfontsize', prefName: 'styleMinFontsize'},
+        {id: 'setunlimitedlinks', prefName: 'setunlimitedlinks'},
+        {id: 'boringcommentregexp', prefName: 'boringcommentcontents'},
+        {id: 'highlightuserscolor', prefName: 'huppercolor'}
+        // {id: 'HUP-hupper-password', prefName: 'getPassword'},
+        // {id: 'HUP-hupper-username', prefName: 'username'}
+    ];
 
     function getPrefNameForElem(elem) {
         var prefName = '';
 
-        switch(elem.id) {
+        switch (elem.id) {
 
           case "enabletrollfilter":
-            prefName = 'extensions.hupper.filtertrolls';
+            prefName = 'filtertrolls';
             break;
           case "trolls":
-            prefName = 'extensions.hupper.trolls';
+            prefName = 'trolls';
             break;
           case "trollcolor":
-            prefName = 'extensions.hupper.trollcolor';
+            prefName = 'trollcolor';
             break;
           case "trollfiltermethod":
-            prefName = 'extensions.hupper.trollfiltermethod';
+            prefName = 'trollfiltermethod';
             break;
           case "trollfilterHideanswers":
-            prefName = 'extensions.hupper.hidetrollanswers';
+            prefName = 'hidetrollanswers';
             break;
           case "huppers":
-            prefName = 'extensions.hupper.huppers';
+            prefName = 'huppers';
             break;
           case "enablenewcommentchange":
             prefName = 'extensions.hupper.replacenewcommenttext';
@@ -160,6 +191,9 @@
           case "boringcommentregexp":
             prefName = "extensions.hupper.boringcommentcontents";
             break;
+          case "setunlimitedlinks":
+            prefName = "extensions.hupper.setunlimitedlinks";
+            break;
         }
         return prefName;
     }
@@ -168,26 +202,43 @@
       return Array.prototype.slice.call(elements);
     }
     function save_options() {
-      var elements = getFormElements();
+      var elements = getFormElements(),
+          toSet = 0,
+          set = 0;
+
+
       elements.forEach(function(elem) {
-        var prefName = getPrefNameForElem(elem), value = '';
-        if (elem.nodeName.toUpperCase() === 'INPUT') {
-          value = elem.type.toUpperCase() === 'CHECKBOX' ? elem.checked : elem.value
-        } else {
-          value = elem.value;
-        }
-        hp.set.byName(prefName, value);
+          var elemId = elem.id,
+          nodeName = elem.nodeName.toUpperCase();
+          if (nodeName === 'INPUT' || nodeName === 'SELECT' || nodeName === 'TEXTAREA') {
+              var pref = prefItems.filter(function (item) {
+                  return item.id === elemId;
+              })[0];
+              var value;
+              if (elem.type && elem.type.toUpperCase() === 'CHECKBOX') {
+                  value = elem.checked;
+              } else {
+                  value = elem.value;
+              }
+              toSet += 1;
+              hp.set[pref.prefName](value, function (response) {
+                  if (response.success) {
+                      set += 1;
+                      if (toSet === set) {
+                          // Update status to let user know options were saved.
+                          var st = document.getElementById('status');
+                          st.innerHTML = 'Options Saved.';
+                          st.style.display = 'block';
+                          setTimeout(function() {
+                              st.innerHTML = '';
+                              st.style.display = '';
+                          }, 1000);
+                      }
+                  }
+              });
+          }
       });
 
-
-      // Update status to let user know options were saved.
-      var st = document.getElementById('status');
-      st.innerHTML = 'Options Saved.';
-      st.style.display = 'block';
-      setTimeout(function() {
-      st.innerHTML = '';
-        st.style.display = '';
-      }, 1000);
     }
 
     // Restores select box state to saved value from localStorage.
@@ -289,19 +340,23 @@
       });
       var elements = getFormElements();
       elements.forEach(function(elem) {
-        var prefName = getPrefNameForElem(elem);
-
-        hp.get.byName(prefName, function(response){
-          var value = response.pref.value,
+          var elemId = elem.id,
               nodeName = elem.nodeName.toUpperCase();
-            if (nodeName === 'INPUT' || nodeName === 'SELECT' || nodeName === 'TEXTAREA') {
-                if (elem.type && elem.type.toUpperCase() === 'CHECKBOX') {
-                    elem.checked = value;
-                } else {
-                    elem.value = value;
-                }
-            }
-        });
+          if (nodeName === 'INPUT' || nodeName === 'SELECT' || nodeName === 'TEXTAREA') {
+              var pref = prefItems.filter(function (item) {
+                  return item.id === elemId;
+              })[0];
+              hp.get[pref.prefName](function (response) {
+                  if (response.success) {
+                      var value = response.pref.value;
+                    if (elem.type && elem.type.toUpperCase() === 'CHECKBOX') {
+                        elem.checked = value;
+                    } else {
+                        elem.value = value;
+                    }
+                  }
+              });
+          }
       });
     }
 
@@ -338,6 +393,9 @@
 
           <input type="checkbox" id="showquicknavbox">
           <label for="showquicknavbox"> Show quick navigation box</label><br>
+
+          <input type="checkbox" id="setunlimitedlinks">
+          <label for="setunlimitedlinks">Show as many comments as possible on a page</label><br>
 
           <label for="hidetaxonomy">Hidable article types</label><br>
           <input type="input" id="hidetaxonomy"><br>
