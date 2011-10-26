@@ -380,84 +380,95 @@
             }
         },
         showPoints: function (direction, comment) {
-            if (!this.plusPoints.length && !this.minusPoints.length) {
-                return;
-            }
-            /**
-            * @param {Hupper.Comment} comment a HUPComment object
-            */
-            var _this = this,
-            createPoint = function (comment) {
-                var point = HUP.El.Li();
-                HUP.El.AddClass(point, 'point');
-                HUP.El.Add(HUP.El.CreateLink(comment.user, '#' + comment.id), point);
-                return point;
-            },
-            togglePoints, type, output;
-            this.pointContainer = HUP.El.Div();
-            this.sumContainer = HUP.El.El('h6');
-            this.sumContainer.setAttribute('title', 'osszesen');
-            /**
-            * show/hide the point details of the comment
-            */
-            togglePoints = function (event) {
-                var _this = this,
-                    transform;
-                if (HUP.El.HasClass(this.parentNode, 'show')) {
-                    transform = new Transform(
-                        HUP.El.GetByClass(this.parentNode, 'point-details')[0],
-                        'SlideUp',
-                        {
-                            onEnd: function () {
-                                HUP.El.RemoveClass(_this.parentNode, 'show');
-                            }
-                        }
-                    );
-                } else {
-                    HUP.El.AddClass(this.parentNode, 'show');
-                    transform = new Transform(
-                        HUP.El.GetByClass(this.parentNode, 'point-details')[0],
-                        'SlideDown'
-                    );
+            try {
+                if (!this.plusPoints.length && !this.minusPoints.length) {
+                    return;
                 }
-            };
-            this.sumContainer.addEventListener('click', togglePoints, true);
+                /**
+                * @param {Hupper.Comment} comment a HUPComment object
+                */
+                var _this = this,
+                createPoint = function (comment) {
+                    var point = HUP.El.Li();
+                    HUP.El.AddClass(point, 'point');
+                    HUP.El.Add(HUP.El.CreateLink(comment.user, '#' + comment.id), point);
+                    return point;
+                },
+                togglePoints, type, points, fragment,
+                sumContainer, minusContainer, plusContainer, pointDetails, pointContainer;
+                /**
+                * show/hide the point details of the comment
+                */
+                togglePoints = function (event) {
+                    var _this = this,
+                        transform;
+                    if (HUP.El.HasClass(this.parentNode, 'show')) {
+                        transform = new Transform(
+                            HUP.El.GetByClass(this.parentNode, 'point-details')[0],
+                            'SlideUp',
+                            {
+                                onEnd: function () {
+                                    HUP.El.RemoveClass(_this.parentNode, 'show');
+                                }
+                            }
+                        );
+                    } else {
+                        HUP.El.AddClass(this.parentNode, 'show');
+                        transform = new Transform(
+                            HUP.El.GetByClass(this.parentNode, 'point-details')[0],
+                            'SlideDown'
+                        );
+                    }
+                };
+                pointContainer = HUP.El.Div();
+                sumContainer = HUP.El.El('h6');
+                pointDetails  = HUP.El.Div();
 
-            this.pointDetails  = HUP.El.Div();
-            HUP.El.AddClass(this.pointDetails, 'point-details');
+                sumContainer.setAttribute('title', 'osszesen');
+                sumContainer.addEventListener('click', togglePoints, true);
+                HUP.El.AddClass(sumContainer, 'sum-points');
+                points = this.plusPoints.length - this.minusPoints.length + ' points';
+                HUP.L.log('points: ', points);
+                sumContainer.innerHTML = points;
 
-            HUP.El.AddClass(this.pointContainer, 'points');
-            HUP.El.AddClass(this.sumContainer, 'sum-points');
-            HUP.El.Add(this.sumContainer, this.pointContainer);
-            HUP.El.Add(this.pointDetails, this.pointContainer);
-            HUP.El.Insert(this.pointContainer, this.cont.firstChild);
-            if (this.plusPoints.length) {
-                this.plusContainer = HUP.El.Ul();
-                type = HUP.El.Li();
-                HUP.El.AddClass(type, 'type');
-                HUP.El.Add(HUP.El.Txt('plus'), type);
-                HUP.El.Add(type, this.plusContainer);
-                this.plusContainer.setAttribute('title', 'plus');
+                HUP.El.AddClass(pointDetails, 'point-details');
 
-                this.plusPoints.forEach(function (comment) {
-                    HUP.El.Add(createPoint(comment), _this.plusContainer);
-                });
-                HUP.El.Add(this.plusContainer, this.pointDetails);
+                HUP.El.AddClass(pointContainer, 'points');
+                HUP.El.Add(sumContainer, pointContainer);
+                HUP.El.Add(pointDetails, pointContainer);
+                fragment = HUP.El.Fragment();
+                HUP.El.Add(pointContainer, fragment);
+
+                if (this.plusPoints.length) {
+                    plusContainer = HUP.El.Ul();
+                    type = HUP.El.Li();
+                    HUP.El.AddClass(type, 'type');
+                    HUP.El.Add(HUP.El.Txt('plus'), type);
+                    HUP.El.Add(type, plusContainer);
+                    plusContainer.setAttribute('title', 'plus');
+
+                    this.plusPoints.forEach(function (comment) {
+                        HUP.El.Add(createPoint(comment), plusContainer);
+                    });
+                    HUP.El.Add(plusContainer, pointDetails);
+                }
+                if (this.minusPoints.length) {
+                    minusContainer = HUP.El.Ul();
+                    minusContainer.setAttribute('title', 'minus');
+                    type = HUP.El.Li();
+                    HUP.El.AddClass(type, 'type');
+                    HUP.El.Add(HUP.El.Txt('minus'), type);
+                    HUP.El.Add(type, minusContainer);
+                    this.minusPoints.forEach(function (comment) {
+                        HUP.El.Add(createPoint(comment), minusContainer);
+                    });
+                    HUP.El.Add(minusContainer, pointDetails);
+                }
+
+                HUP.El.Insert(fragment, this.cont.firstChild);
+            } catch (e) {
+                Components.utils.reportError(e);
             }
-            if (this.minusPoints.length) {
-                this.minusContainer = HUP.El.Ul();
-                this.minusContainer.setAttribute('title', 'minus');
-                type = HUP.El.Li();
-                HUP.El.AddClass(type, 'type');
-                HUP.El.Add(HUP.El.Txt('minus'), type);
-                HUP.El.Add(type, this.minusContainer);
-                this.minusPoints.forEach(function (comment) {
-                    HUP.El.Add(createPoint(comment), _this.minusContainer);
-                });
-                HUP.El.Add(this.minusContainer, this.pointDetails);
-            }
-            output = this.plusPoints.length - this.minusPoints.length + ' points';
-            this.sumContainer.innerHTML = output;
         }
     };
     /**
