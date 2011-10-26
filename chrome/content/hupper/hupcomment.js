@@ -25,6 +25,7 @@
         if (HUP.w.location.search.replace(/\?page=/, '') > 0) {
             this.todayComment();
         }
+        this.replies = [];
         this.newComment();
         this.footerLinks = HUP.El.GetFirstTag('ul', this.footer);
         this.getIndent(); // get indent state
@@ -38,7 +39,7 @@
         this.minusPoints = [];
         if (this.parent !== -1) {
             this.getPlusOrMinus();
-            this.addLinkToParent();
+            this.parent.addReply(this);
             // this.parent.cont.innerHTML += '<a href="#'+this.id+'">' + this.user + '</a>, ';
             if (this.plusOne || this.minusOne) {
                 if (this.plusOne) {
@@ -81,25 +82,6 @@
                 indent++;
             }
             this.indent = indent;
-        },
-        addLinkToParent: function () {
-            var replies = HUP.El.GetByClass(this.parent.cont, 'hup-replies', 'div'),
-                link = HUP.El.CreateLink(this.user, '#' + this.id);
-            this.isBoringComment(function (isBoring) {
-                if (isBoring) {
-                    HUP.El.AddClass(link, 'hup-boring');
-                }
-            });
-            if (!replies.length) {
-                replies = HUP.El.Div();
-                HUP.El.AddClass(replies, 'hup-replies');
-                HUP.El.Add(HUP.El.Txt('replies: '), replies);
-                HUP.El.Add(replies, this.parent.cont);
-            } else {
-                replies = replies[0];
-                HUP.El.Add(HUP.El.Txt(', '), replies);
-            }
-            HUP.El.Add(link, replies);
         },
         /**
         * checks the comment, and if it has been posted "today", than adds the
@@ -325,6 +307,70 @@
         isMinusOne: function () {
             var firstParagraph = HUP.El.GetFirstTag('p', this.cont);
             return minusOneRex.test(firstParagraph.innerHTML);
+        },
+        renderReplies: function () {
+            var replies = HUP.El.GetByClass(this.footer, 'hup-replies', 'div'),
+                fragment = HUP.El.Fragment();
+            if (!replies.length) {
+                replies = HUP.El.Div();
+                HUP.El.AddClass(replies, 'hup-replies');
+                HUP.El.Insert(replies, this.footer.firstChild);
+            } else {
+                replies = replies[0];
+                HUP.El.RemoveAll(replies);
+            }
+            HUP.El.Add(HUP.El.Txt('replies: '), fragment);
+            this.replies.forEach(function (reply, index) {
+                if (index > 0) {
+                    HUP.El.Add(HUP.El.Txt(', '), fragment);
+                }
+                reply.isBoringComment(function (isBoring) {
+                    var link = HUP.El.CreateLink(reply.user, '#' + reply.id);
+                    if (isBoring) {
+                        HUP.El.AddClass(link, 'hup-boring');
+                    }
+                    HUP.El.Add(link, fragment);
+                });
+            });
+            HUP.El.Add(fragment, replies);
+        },
+        addReply: function (child) {
+            var scope = {},
+                me = this;
+
+            this.replies.push(child);
+
+            // Components.utils.import('resource://huppermodules/timer.jsm', scope);
+            // me.renderReplies();
+            if (me._repliesRender) {
+                clearTimeout(me._repliesRender);
+                me._repliesRender = null;
+            }
+            me._repliesRender = setTimeout(function () {
+                me.renderReplies();
+                me._repliesRender = null;
+            }, 20);
+            /*
+            var me = this,
+                replies = HUP.El.GetByClass(this.footer, 'hup-replies', 'div'),
+                link = HUP.El.CreateLink(child.user, '#' + child.id);
+            child.isBoringComment(function (isBoring) {
+                HUP.L.log('isBoring: ', isBoring);
+                if (isBoring) {
+                    HUP.El.AddClass(link, 'hup-boring');
+                }
+                if (!replies.length) {
+                    replies = HUP.El.Div();
+                    HUP.El.AddClass(replies, 'hup-replies');
+                    HUP.El.Add(HUP.El.Txt('replies: '), replies);
+                    HUP.El.Insert(replies, me.footer.firstChild);
+                } else {
+                    replies = replies[0];
+                    HUP.El.Add(HUP.El.Txt(', '), replies);
+                }
+                HUP.El.Add(link, replies);
+            });
+            */
         },
         addPoint: function (direction, comment) {
             if (direction > 0) {
