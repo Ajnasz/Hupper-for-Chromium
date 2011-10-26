@@ -41,12 +41,10 @@
             this.getPlusOrMinus();
             this.parent.addReply(this);
             // this.parent.cont.innerHTML += '<a href="#'+this.id+'">' + this.user + '</a>, ';
-            if (this.plusOne || this.minusOne) {
-                if (this.plusOne) {
-                    this.parent.addPoint(1, this);
-                } else {
-                    this.parent.addPoint(-1, this);
-                }
+            if (this.plusOne) {
+                this.parent.addPoint(1, this);
+            } else if (this.minusOne) {
+                this.parent.addPoint(-1, this);
             }
         }
         var me = this;

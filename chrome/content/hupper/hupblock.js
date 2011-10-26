@@ -191,7 +191,9 @@ Hupper.Block.prototype = {
     this.showButton = showButton;
   },
   addMoveButtons: function() {
-    if(!this.titleNode) return;
+    if(!this.titleNode) {
+        return;
+    }
     this.upButton = HUP.El.Btn(HUP.Bundles.getString('moveBoxUp'), 'hupper-button up-button block-move-button');
     this.downButton = HUP.El.Btn(HUP.Bundles.getString('moveBoxDown'), 'hupper-button down-button block-move-button');
     this.leftButton = HUP.El.Btn(HUP.Bundles.getString('moveBoxLeft'), 'hupper-button left-button block-move-button');

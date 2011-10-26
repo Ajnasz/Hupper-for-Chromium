@@ -355,3 +355,4 @@ Hupper.Elementer.prototype = {
     this.RemoveClass(el, 'hup-hidden');
   }
 };
+
