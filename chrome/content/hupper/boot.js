@@ -80,10 +80,14 @@ Hupper.boot = function(e) {
           return output;
         },
         getFormattedString: function(n) {
-          var output = '';
+          var output = '',
+              args = Array.prototype.slice.call(arguments, 1);
           switch(n) {
             case 'hideTaxonomy':
-              output = 'hideTaxonomy';
+              output = 'hide artilces in the ' + args[0] + ' category';
+              break;
+            case 'pointSum':
+              output = args[0] + ' points';
               break;
             default:
               output = 'formatted bundle string is undefined: ' + n;
@@ -236,7 +240,6 @@ Hupper.boot = function(e) {
                   callStr.push('a[href^=" http://www.hup.hu' + link + '"]');
                   callStr.push('a[href^=" http://www.hup.hu' + link + '"]');
               });
-              HUP.L.log(callStr);
               Array.prototype.slice
                   .call(HUP.w.querySelectorAll(callStr.join(',')))
                   .forEach(function (elem) {
