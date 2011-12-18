@@ -250,9 +250,13 @@
           });
           var tree = new TreeView('trollsTree', trolls);
           var updateField = function () {
-              field.value = trolls.map(function (troll) {
+              field.value = trolls
+                .map(function (troll) {
                   return troll.name.text;
-              }).join(',');
+                })
+                .filter(function (troll) {
+                      return troll !== '';
+                  }).join(',');
           };
           var isEmpty = function (rowIndex) {
               return trolls[rowIndex].name.text === '';
@@ -268,6 +272,7 @@
               } else {
                   tree.addEmptyRow();
               }
+              updateField();
           });
           tree.on('removeRow', function (index) {
               var item = trolls.splice(index, 1);
