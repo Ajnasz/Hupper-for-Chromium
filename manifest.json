@@ -1,6 +1,6 @@
 {
   "name": "Hupper",
-  "version": "1.2",
+  "version": "1.2.1",
   "description": "Extension for HUP.hu",
   "background_page": "background.html",
   "options_page": "options.html",
