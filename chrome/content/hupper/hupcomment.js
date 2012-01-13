@@ -1,4 +1,4 @@
-/*global Hupper: true, HUP: true, Transform: true */
+/*global Hupper: true, HUP: true */
 (function () {
     var plusOneRex = new RegExp('(?:^|\\s)\\+1(?:$|\\s|\\.|,)'),
         minusOneRex = new RegExp('(?:^|\\s)-1(?:$|\\s|\\.|,)'),
@@ -401,7 +401,7 @@
                     var _this = this,
                         transform;
                     if (HUP.El.HasClass(this.parentNode, 'show')) {
-                        transform = new Transform(
+                        transform = new Hupper.Transform(
                             HUP.El.GetByClass(this.parentNode, 'point-details')[0],
                             'SlideUp',
                             {
@@ -412,7 +412,7 @@
                         );
                     } else {
                         HUP.El.AddClass(this.parentNode, 'show');
-                        transform = new Transform(
+                        transform = new Hupper.Transform(
                             HUP.El.GetByClass(this.parentNode, 'point-details')[0],
                             'SlideDown'
                         );

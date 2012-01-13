@@ -7,7 +7,7 @@
  * @param {String} type type of the effect
  * @param {Object} [opts] options
  */
-var Transform = function(ob, type, opts) {
+Hupper.Transform = function(ob, type, opts) {
   if(typeof ob == 'object') {
     this.ob = ob;
   } else if(typeof ob == 'string') {
@@ -25,7 +25,7 @@ var Transform = function(ob, type, opts) {
   this.ob.style.display = '';
   this.start(this.type);
 };
-Transform.prototype = {
+Hupper.Transform.prototype = {
   /**
    * Starts the transformation
    * @method start
