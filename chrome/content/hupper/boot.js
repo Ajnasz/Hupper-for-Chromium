@@ -22,7 +22,7 @@ Hupper.boot = function(e) {
       // Elementer
       var elementer = new Hupper.Elementer(ww);;
       HUP.El = elementer;
-      HUP.Ev = new HUPEvents();
+      HUP.Ev = new Hupper.Events(HUP.w);
 
       HUP.Bundles = {
         getString: function(n) {
