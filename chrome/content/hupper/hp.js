@@ -1,7 +1,8 @@
 var HP;
 (function () {
     var prefs = {};
-    var getPref = function (n, cb, type) {
+
+    function getPref(n, cb, type) {
         var callback = function (response) {
             switch (type) {
             case 'bool':
@@ -25,7 +26,8 @@ var HP;
         } else {
             callback({success: true, pref: {name: n, value: prefs[n]}});
         }
-    };
+    }
+
     var setPref = function (n, v, cb) {
         var callback = function (response) {
             prefs[response.pref.name] = response.pref.value;
