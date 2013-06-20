@@ -243,17 +243,12 @@ Hupper.boot = function(e) {
                   callStr.push('a[href^=" http://www.hup.hu' + link + '"]');
               });
               Array.prototype.slice
-                  .call(HUP.w.querySelectorAll(callStr.join(',')))
-                  .forEach(function (elem) {
-                  var link = elem.href,
-                      parts = link.split('#');
-                  if (parts[0].indexOf('?') > -1) {
-                      parts[0] += '&';
-                  } else {
-                      parts[0] += '?';
-                  }
-                  parts[0] += 'comments_per_page=9999';
-                  elem.href = parts.join('#');
+                  .call(HUP.w.querySelectorAll(callStr.join(','))).forEach(function (elem) {
+                      if (elem.search.length > 1) {
+                          elem.search += '&comments_per_page=9999';
+                      } else {
+                          elem.search = '?comments_per_page=9999';
+                      }
               });
           }
       });
