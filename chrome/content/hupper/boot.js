@@ -219,7 +219,8 @@ Hupper.boot = function(e) {
               var linkParams = [
                   '/cikkek',
                   '/node',
-                  '/promo'
+                  '/promo',
+                  '/szavazasok'
               ], callStr = [];
               linkParams.forEach(function (link) {
                   callStr.push('a[href^="' + link + '"]');
