@@ -13,6 +13,7 @@ Hupper.boot = function(e) {
       * A unique global object to store all global objects/array/... of the Hupper Extension
       */
       HUP = {};
+      Hupper.HUP = HUP;
       // HUP document object
       HUP.w = ww;
       HUP.hp = new HP();
