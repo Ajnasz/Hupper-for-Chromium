@@ -1,8 +1,11 @@
 {
   "name": "Hupper",
-  "version": "1.2.1",
+  "version": "1.2.2",
+  "manifest_version": 2,
   "description": "Extension for HUP.hu",
-  "background_page": "background.html",
+  "background": {
+      "scripts": ["chrome/background/background.js", "chrome/background/prefs.js"]
+  },
   "options_page": "options.html",
   "content_scripts": [
     {
