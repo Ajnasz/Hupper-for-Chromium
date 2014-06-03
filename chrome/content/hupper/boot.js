@@ -7,7 +7,7 @@ Hupper.boot = function(e) {
     var logger = new Hupper.Log();
     // logger.log(ww.location.hostname);
     if(ww && ww.location && typeof ww.location.hostname == 'string'
-        && (ww.location.hostname == 'hup.hu' || ww.location.hostname == 'www.hup.hu' ||
+        && (ww.location.hostname == 'hup.hu' || ww.location.hostname == 'www.hup.hu' || ww.location.hostname === 'hup.lh' ||
         /http:\/\/(localhost\/hupper\/hg|hupper|hupperl)\/.+\.html/.test(ww.location.href))) {
       /**
       * A unique global object to store all global objects/array/... of the Hupper Extension

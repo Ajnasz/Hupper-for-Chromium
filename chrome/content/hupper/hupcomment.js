@@ -503,7 +503,7 @@
                     HUP.El.AddClass(coms, 'keep-boring-comments');
                 }
             });
-            ds = HUP.El.GetByClass(coms, 'comment', 'div');
+            ds = HUP.El.GetByClass(coms.parentNode, 'comment', 'div');
             this.comments = [];
             this.indentComments = [];
             this.newComments = [];

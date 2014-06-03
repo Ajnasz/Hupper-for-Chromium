@@ -1,6 +1,6 @@
 {
   "name": "Hupper",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "manifest_version": 2,
   "description": "Extension for HUP.hu",
   "background": {
@@ -10,7 +10,7 @@
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": ["http://hupperl/*", "http://hup.hu/*"],
+      "matches": ["http://hup.lh/*", "http://hup.lh:3000/*", "http://hup.hu/*"],
       "js": [
         "chrome/content/hupper/namespace.js",
         "chrome/content/hupper/hp.js",
@@ -39,8 +39,9 @@
     "tabs",
     "http://hup.hu/",
     "https://hup.hu/",
-    "http://hupperl/",
-    "https://hupperl/",
+    "http://hup.lh/",
+    "http://hup.lh:3000/",
+    "https://hup.lh/",
     "unlimitedStorage"
   ]
 }
